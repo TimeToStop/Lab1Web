@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)https://se.ifmo.ru/~s265087/lab1_web/WEB_Lab/input.php?X=-2 -->
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Lab1</title>
+    <link rel="stylesheet" href="./Lab1_files/reset.css">
+    <style type="text/css">
+        body {
+            background: #45688E;
+            font-family: monospace;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 2%;
+            background: url("img/xv.png") white;
+            text-align: center;
+            font-family: monospace;
+            font-size: 14pt;
+        }
+
+
+        img[src] {
+            vertical-align: top;
+            margin: 10px 0 0 0;
+        }
+
+        .Form p {
+            margin-bottom: 2px;
+        }
+
+        input {
+            margin: 0 0 0 1px;
+        }
+
+        #answer {
+            background: #5E81A8;
+            width: 60%;
+            table-layout: auto;
+            margin: 10px 0 10px 20%;
+        }
+
+        .word-break {
+            word-break: break-all;
+        }
+
+        #answer td {
+            border: 2px solid black;
+        }
+
+        .Pip:before {
+            text-decoration: line-through;
+            content: "ПИПу";
+        }
+
+        .Header {
+            font-family: monospace;
+            color: #45688E;
+        }
+
+        .Header * {
+            margin-top: 5px;
+        }
+
+        .Header h1 {
+            font-size: 25pt;
+            color: darkblue;
+        }
+
+        .Header h2 {
+            font-size: 18pt;
+        }
+
+        .Header h3 {
+            font-size: 14pt;
+            color: #5E81A8;
+        }
+
+        .Header h4 {
+            font-size: 14pt;
+            color: cornflowerblue;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .Blue:focus-within {
+            background: #45688E;
+        }
+
+        [type="submit"] {
+            margin-top: 1%;
+        }
+
+        #error {
+            color = red;
+        }
+    </style>
+</head>
+<body>
+<table id="mainTable">
+    <tbody><tr>
+        <td>
+            <div class="Header bold" wfd-id="18">
+                <h1>Лабораторная работа №1 по <span class="Pip" wfd-id="19"> Веб-программированию</span></h1>
+                <h2>Вариант №211006</h2>
+                <h3>Выполнил: Горшков Артем Владимирович</h3>
+                <h4>Группа: P3211</h4>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="./Lab1_files/image_1.png">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form method="GET" action="https://se.ifmo.ru/~s265087/lab1_web/WEB_Lab/input.php" onsubmit="return valid()" wfd-id="1">
+                <table class="Form">
+                    <tbody><tr>
+                        <td>
+                            <p>Значение X:
+                                <input type="radio" name="X" value="-2" id="X0" wfd-id="36">
+                                <label for="X0" wfd-id="17">-2</label>
+                                <input type="radio" name="X" value="-1.5" id="X1" wfd-id="35">
+                                <label for="X1" wfd-id="16">-1.5</label>
+                                <input type="radio" name="X" value="-1" id="X2" wfd-id="34">
+                                <label for="X2" wfd-id="15">-1</label>
+                                <input type="radio" name="X" value="-0.5" id="X3" wfd-id="33">
+                                <label for="X3" wfd-id="14">-0.5</label>
+                                <input type="radio" name="X" value="0" id="X4" wfd-id="32">
+                                <label for="X4" wfd-id="13">0</label>
+                                <input type="radio" name="X" value="0.5" id="X5" wfd-id="31">
+                                <label for="X5" wfd-id="12">0.5</label>
+                                <input type="radio" name="X" value="1" id="X6" wfd-id="30">
+                                <label for="X6" wfd-id="11">1</label>
+                                <input type="radio" name="X" value="1.5" id="X7" wfd-id="29">
+                                <label for="X7" wfd-id="10">1.5</label>
+                                <input type="radio" name="X" value="2" id="X8" wfd-id="28">
+                                <label for="X8" wfd-id="9">2</label>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr class="Blue">
+                        <td>
+                            <p>
+                                <label for="textfieldY" wfd-id="8">Значение Y ∈ (-5;3):</label>
+                                <input type="text" id="textfieldY" autocomplete="off" name="Y" wfd-id="27" style="border-color: red;">
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                Значение R:
+                                <input type="radio" name="R" value="1" id="R0" wfd-id="26">
+                                <label for="R0" wfd-id="7">1</label>
+                                <input type="radio" name="R" value="2" id="R1" wfd-id="25">
+                                <label for="R1" wfd-id="6">2</label>
+                                <input type="radio" name="R" value="3" id="R2" wfd-id="24">
+                                <label for="R2" wfd-id="5">3</label>
+                                <input type="radio" name="R" value="4" id="R3" wfd-id="23">
+                                <label for="R3" wfd-id="4">4</label>
+                                <input type="radio" name="R" value="5" id="R4" wfd-id="22">
+                                <label for="R4" wfd-id="3">5</label>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <input type="submit" value="Отправить" wfd-id="21">
+                            </p>
+                            <div id="error" wfd-id="2">Значение Y должно быть в диапазоне (-5;3)</div>
+                        </td>
+                    </tr>
+                </tbody></table>
+                <input type="hidden" name="uniqid" value="5f496030b6897" wfd-id="20">
+            </form>
+        </td>
+    </tr>
+        <tr>
+        <td>
+            <table id="answer">
+                <tbody><tr class="bold">
+                    <td>X</td>
+                    <td>Y</td>
+                    <td>R</td>
+                    <td>Ответ</td>
+                    <td>Время</td>
+                    <td>Время работы скрипта (в мс)</td>
+                </tr>
+                                    <tr>
+                        <td></td>
+                        <td class="word-break"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="script_time"></td>
+                    </tr>
+                                        <tr>
+                        <td></td>
+                        <td class="word-break"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="script_time"></td>
+                    </tr>
+                                        <tr>
+                        <td></td>
+                        <td class="word-break"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="script_time"></td>
+                    </tr>
+                    </tbody></table>
+        </td>
+    </tr>
+    <tr>
+        <td id="stand_deviation">Время стандартного отклонения работы скрипта: NaN мс.</td>
+    </tr>
+</tbody></table>
+<script type="text/javascript">
+    let er = document.getElementById("error");
+    let textField = document.getElementById("textfieldY");
+    let Xfield = document.getElementsByName("X");
+    let Rfield = document.getElementsByName("R");
+    let script_time = [];
+    Array.prototype.forEach.call(document.getElementsByClassName("script_time"), el => {
+        script_time.push(el.textContent);
+    });
+    if (script_time.length !== 0) {
+        document.getElementById("stand_deviation").innerHTML = "Время стандартного отклонения работы скрипта: " + calc_stand_deviation(script_time) + " мс.";
+    }
+
+    function calc_stand_deviation(arr) {
+        let sum = 0;
+        Array.prototype.forEach.call(arr, (el) => {
+            sum = sum + parseFloat(el);
+        });
+        let mid_arifm = sum / arr.length;
+        let sum_of_sq = 0;
+        Array.prototype.forEach.call(arr, el => {
+            sum_of_sq += Math.pow((parseFloat(el) - mid_arifm), 2);
+        });
+        return Math.round(Math.sqrt(sum_of_sq / arr.length) * Math.pow(10,6)) / Math.pow(10,6);
+    }
+
+    function valid() {
+        let validX = false;
+        let validR = false;
+        Array.prototype.forEach.call(Xfield, function (button) {
+            if (button.checked) validX = true;
+        });
+        Array.prototype.forEach.call(Rfield, function (button) {
+            if (button.checked) validR = true;
+        });
+        let value = textField.value.substring(0, 10);
+        value = value.replace(",", ".");
+        if (value === "" || isNaN(value) || value <= -5 || value >= 3) {
+            if (document.getElementById("servErr") != null) document.getElementById("servErr").innerHTML = "";
+            er.innerHTML = "Значение Y должно быть в диапазоне (-5;3)";
+            textField.style.borderColor = "red";
+            return false;
+        }
+        if (!validX) {
+            if (document.getElementById("servErr") != null) document.getElementById("servErr").innerHTML = "";
+            er.innerText = "Укажите значение X";
+            return false;
+        }
+        if (!validR) {
+            if (document.getElementById("servErr") != null) document.getElementById("servErr").innerHTML = "";
+            er.innerHTML = "Укажите значение R";
+            return false;
+        }
+        return true;
+    }
+</script>
+
+<div class="kpm_LTR" id="kpm-root" wfd-id="0"></div></body></html>
