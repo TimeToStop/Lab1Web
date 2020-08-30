@@ -1,0 +1,437 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html>
+ <head>
+    <meta charset="UTF-8">
+    <title>Web_1</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" href="images/favicon.jpg" type="img/jpg">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"> </script>
+ </head>
+ <body>
+  <div id = "container">
+        <header>
+            <div class = "header1">Лабораторная работа №1 по Веб-программированию<img src='https://reklama-no.ru/smiles/hi.gif'></div>
+        <div class = "header2">Вариант №2210</div>
+        <div class = "header3">Студентка: Краюхина Марина Юрьевна</div>
+        <div class = "header4">Группа: <span class="P3111"> P3211</span></div>
+        </header>
+
+     <img src="images/image_2.jpg" width = "250px" heigth = "250px">
+
+        <div id = "menu">
+            <form method="GET" action = "input.php" onsubmit = "return valid()"">
+                    <p> Значение Х:
+                           <input type="checkbox" name="X" value="-5" id="X0">
+               <label for="X0">-5</label>
+               <input type="checkbox" name="X" value="-4" id="X1">
+               <label for="X1">-4</label>
+               <input type="checkbox" name="X" value="-3" id="X2">
+               <label for="X2">-3</label>
+               <input type="checkbox" name="X" value="-2" id="X3">
+               <label for="X3">-2</label>
+               <input type="checkbox" name="X" value="-1" id="X4">
+               <label for="X4">-1</label>
+               <input type="checkbox" name="X" value="0" id="X5">
+               <label for="X5">0</label>
+               <input type="checkbox" name="X" value="1" id="X6">
+               <label for="X6">1</label>
+               <input type="checkbox" name="X" value="2" id="X7">
+               <label for="X7">2</label>
+               <input type="checkbox" name="X" value="3" id="X8">
+               <label for="X8">3</label>
+            </p>
+
+                        <p class = "forY">
+                           <label for="textfieldY">Значение Y ∈ (-5;5):</label>
+               <input type="text" id="textfieldY" autocomplete="off" name="Y" placeholder = "Введите значение Y">
+            </p>
+
+                        <p> Значение R:
+               <input type="checkbox" name="R" value="1" id="R0">
+               <label for="R0">1</label>
+               <input type="checkbox" name="R" value="2" id="R1">
+               <label for="R1">2</label>
+               <input type="checkbox" name="R" value="3" id="R2">
+               <label for="R2">3</label>
+               <input type="checkbox" name="R" value="4" id="R3">
+               <label for="R3">4</label>
+               <input type="checkbox" name="R" value="5" id="R4">
+               <label for="R4">5</label>
+            </p>
+
+                        <p>
+               <input type="submit" value="Отправить">
+                           <input value="Очистить" onclick="clearbuttons()" type="button">
+            </p>
+
+            <div id="error"></div>
+            <input type="hidden" name="uniqid" value="<?= uniqid(); ?>">
+
+                </form>
+
+
+<?php
+    $start = microtime(true);
+    if (isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R'])) {
+        $Y = $_GET['Y'];
+        $Y = str_ireplace(",", ".", $Y);
+        $Y_Num = substr($_GET['Y'], 0, 10);
+        $X = $_GET['X'];
+        $R = $_GET['R'];
+        $validX = false;
+        $validR = false;
+
+        for ($i = -5; $i <= 3; $i += 1) {
+            if (strcasecmp(strval($i), $X) == 0) $validX = true;
+        }
+        for ($i = 1; $i <= 5; $i += 1) {
+            if (strcasecmp(strval($i), $R) == 0) $validR = true;
+        }
+        if (!is_numeric($Y)) {
+            echo '<div id="servErr">Y не число!</div>';
+        } elseif (!is_numeric($R)) {
+            echo '<div id="servErr">R не число!</div>';
+        } elseif (!is_numeric($X)) {
+            echo '<div id="servErr">X не число!</div>';
+        } elseif ($Y_Num <= -5 || $Y_Num >= 5) {
+            echo '<div id="servErr">Y не в диапазоне</div>';
+        } elseif ($validX == false) {
+            echo '<div id="servErr">Недопустимое значение X</div>';
+        } elseif ($validR == false) {
+             echo '<div id="servErr">Недопустимое значение R</div>';
+        }
+    }
+  ?>
+
+     <div>
+                    <table id = "answer">
+                          <tr id='bold'>
+                <td class = "col1">X</td>
+                <td class = "col2">Y</td>
+                <td class = "col3">R</td>
+                <td class = "col4">Ответ</td>
+                <td class = "col5">Время</td>
+                <td class = "col6">Время работы скрипта (в мс)</td>
+              </tr>
+
+                           <?php
+                $history = isset($_SESSION['history']) && is_array($_SESSION['history']) ? $_SESSION['history'] : [];
+                if ((isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R'])) && !($Y_Num <= -5 || $Y_Num >= 5)) {
+                    if ($X < 0) {
+                        if ($Y_Num > 0) {
+                            if ($X ** 2 + $Y_Num ** 2 <= (($R / 2)**2)) {
+                                $AnsW = "Точка в зоне";
+                            } else {
+                                $AnsW = "Точка  не в зоне";
+                            }
+                        } else {
+                            if ((- $R/2 <= $Y_Num) && (-$R <= $X)) {
+                                $AnsW = "Точка в зоне";
+                            } else {
+                                $AnsW = "Точка  не в зоне";
+                            }
+                        }
+                    } else {
+                                                if ($X == 0){
+                                                        if( -$R/2 <= $Y_Num && $Y_Num <= $R){
+                                $AnsW = "Точка в зоне";
+                            } else {
+                                $AnsW = "Точка  не в зоне";
+                            }
+                                                }
+                        elseif ($Y < 0) {
+                            $AnsW = "Точка  не в зоне";
+                        }
+                                                else {
+                            if ($X <= $R/2 && $Y_Num <= $R) {
+                                $AnsW = "Точка в зоне";
+                            } else {
+                                $AnsW = "Точка  не в зоне";
+                            }
+                        }
+                    }
+                    setlocale(LC_ALL, 'ru_RU.UTF-8');
+                    $time = strftime(' %d %b %Y %H:%M:%S', time());
+                    $script = round((microtime(true) - $start) * 10 ** 3, 3);
+                    $script = str_ireplace(",", ".", $script);
+                    $uniqid = $_GET['uniqid'];
+                    if ($history[0]["uniqid"] !== $uniqid) {
+                        array_unshift($history, [
+                            'X' => $X,
+                            'Y' => $Y,
+                            'R' => $R,
+                            'Ans' => $AnsW,
+                            'time' => $time,
+                            'script' => $script,
+                            'uniqid' => $uniqid
+                        ]);
+                    }
+                    $_SESSION['history'] = $history;
+
+                }
+                foreach ($history as $result) {
+                    ?>
+                    <tr>
+                        <td><?= $result['X'] ?></td>
+                        <td class="word-break"><?= $result['Y'] ?></td>
+                        <td><?= $result['R'] ?></td>
+                        <td><?= $result["Ans"] ?></td>
+                        <td><?= $result["time"] ?></td>
+                        <td class="script_time"><?= $result["script"] ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                     </table>
+            </div>
+
+
+        </div>
+
+
+ <script type="text/javascript">
+
+    let er = document.getElementById("error");
+    let textField = document.getElementById("textfieldY");
+    let Xfield = document.getElementsByName("X");
+    let Rfield = document.getElementsByName("R");
+
+
+        $("input:checkbox").click(function () {
+       var group = "input:checkbox[name='" + $(this).prop("name") + "']";
+       $(group).prop("checked", false);
+       $(this).prop("checked", true);
+});
+
+
+        function clearbuttons() {
+        $("form").trigger("reset")
+    }
+
+    function valid() {
+        let validX = false;
+        let validR = false;
+        Array.prototype.forEach.call(Xfield, function (button) {
+            if (button.checked) validX = true;
+        });
+        Array.prototype.forEach.call(Rfield, function (button) {
+            if (button.checked) validR = true;
+        });
+        let value = textField.value.substring(0, 10);
+        value = value.replace(",", ".");
+
+        if (value === "" || isNaN(value) || value <= -5 || value >= 5) {
+            if (document.getElementById("servErr") != null) document.getElementById("servErr").innerHTML = "";
+            er.innerHTML = "Значение Y должно быть в диапазоне (-5;5)";
+            textField.style.backgroundColor = "red";
+            return false;
+        }
+                else{
+                        textField.style.backgroundColor = "";
+                }
+
+        if (!validX) {
+            if (document.getElementById("servErr") != null) document.getElementById("servErr").innerHTML = "";
+            er.innerText = "Укажите значение X";
+            return false;
+        }
+        if (!validR) {
+            if (document.getElementById("servErr") != null) document.getElementById("servErr").innerHTML = "";
+            er.innerHTML = "Укажите значение R";
+            return false;
+        }
+      return true;
+    }
+    </script>
+  </div>
+ </body>
+</html>
+
+
+
+                 
+<?php
+$history = isset($_SESSION['history']) && is_array($_SESSION['history']) ? $_SESSION['history'] : [];
+if ((isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R'])) && !($Y_Num <= -5 || $Y_Num >= 5))
+{
+    if ($X < 0)
+     {
+        if ($Y_Num > 0)
+        {
+            if ($X ** 2 + $Y_Num ** 2 <= (($R / 2)**2)) 
+            {
+                $AnsW = "Точка в зоне";
+            } 
+            else 
+            {
+                $AnsW = "Точка  не в зоне";
+            }
+        } 
+        else 
+        {
+            if ((- $R/2 <= $Y_Num) && (-$R <= $X)) 
+            {
+                $AnsW = "Точка в зоне";
+            } 
+            else
+            {
+                $AnsW = "Точка  не в зоне";
+            }
+        }
+    } else {
+        if ($X == 0)
+        {
+            if( -$R/2 <= $Y_Num && $Y_Num <= $R)
+            {
+                $AnsW = "Точка в зоне";
+            }
+            else 
+            {
+                $AnsW = "Точка  не в зоне";
+            }
+        }
+        elseif ($Y < 0)
+        {
+            $AnsW = "Точка  не в зоне";
+        }
+        else
+        {
+            if ($X <= $R/2 && $Y_Num <= $R) 
+            {
+                $AnsW = "Точка в зоне";
+            } 
+            else 
+            {
+                $AnsW = "Точка  не в зоне";
+            }
+        }
+    }
+
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    $time = strftime(' %d %b %Y %H:%M:%S', time());
+    $script = round((microtime(true) - $start) * 10 ** 3, 3);
+    $script = str_ireplace(",", ".", $script);
+    $uniqid = $_GET['uniqid'];
+    if ($history[0]["uniqid"] !== $uniqid)
+    {
+        array_unshift($history, 
+        [
+            'X' => $X,
+            'Y' => $Y,
+            'R' => $R,
+            'Ans' => $AnsW,
+            'time' => $time,
+            'script' => $script,
+            'uniqid' => $uniqid
+        ]);
+    }
+
+    $_SESSION['history'] = $history;
+
+}
+foreach ($history as $result) {
+    ?>
+    <tr>
+        <td><?= $result['X'] ?></td>
+        <td class="word-break"><?= $result['Y'] ?></td>
+        <td><?= $result['R'] ?></td>
+        <td><?= $result["Ans"] ?></td>
+        <td><?= $result["time"] ?></td>
+        <td class="script_time"><?= $result["script"] ?></td>
+    </tr>
+    <?php
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if ($X <= 0 && $Y > 0)
+{
+    if ($Y <= $X + $R / 2.0)
+    {
+        $IS_SUCCESS = TRUE;
+    }
+}
+elseif ($X <= 0 && $Y <= 0)
+{
+    $IS_SUCCESS = TRUE;
+}
+else($X >= 0 && $Y < 0)
+{
+    if ($X * $X + $Y * $Y <= $R * $R)
+    {
+        $IS_SUCCESS = TRUE;
+    }
+}
+
+
+
+
+
+
+
+
+setlocale(LC_ALL, 'ru_RU.UTF-8');
+$time = strftime(' %d %b %Y %H:%M:%S', time());
+$script = round((microtime(true) - $start) * 10 ** 3, 3);
+$script = str_ireplace(",", ".", $script);
+$uniqid = $_GET['uniqid'];
+if (count($history) == 0 || $history[0]['uniqid'] !== $uniqid)
+{
+    array_unshift($history,
+        [
+            'X' => $X,
+            'Y' => $Y,
+            'R' => $R,
+            'Answer' => $ANSWER,
+            'time' => 0,
+            'script' => 0,
+            'uniqid' => $uniqid
+        ]);
+}
+
+$_SESSION['history'] = $history;
+}
+foreach ($history as $result) {
+?>
+<tr>
+    <td><?= $result['X'] ?></td>
+    <td class="word-break"><?= $result['Y'] ?></td>
+    <td><?= $result['R'] ?></td>
+    <td><?= $result["Ans"] ?></td>
+    <td><?= $result["time"] ?></td>
+    <td class="script_time"><?= $result["script"] ?></td>
+</tr>
+<?php
+}
