@@ -1,6 +1,11 @@
 
 <?php session_start(); ?>
 <?php
+function isEmpty()
+{
+    return (!isset($_GET['X']) && !isset($_GET['Y']) && !isset($_GET['R']));
+}
+
 function isValid()
 {
     if(isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R']))
@@ -10,16 +15,31 @@ function isValid()
         $R = str_ireplace(',','.', $_GET['R']);
         if (!is_numeric($X))
         {
-            return '<p>X не число!</p>';
+            return '<p id="error">X не число!</p>';
         }
         elseif (!is_numeric($Y))
         {
-            return '<p>Y не числo!</p>';
+            return '<p id="error">Y не числo!</p>';
         }
         elseif (!is_numeric($R))
         {
-            return '<p>R не число!</p>';
+            return '<p id="error">R не число!</p>';
         }
+
+
+        if(!(-5 < $Y && $Y < 3))
+        {
+            return '<p id="error">Y не входит в диапозон (-5; 3)!</p>';
+        }
+
+        if(!(2 < $R && $R < 5))
+        {
+            return '<p id="error">R не входит в диапозон (2; 5)!</p>';
+        }
+    }
+    else
+    {
+        return '<p id="error">Не заданы все параметры: X,Y,R</p>';
     }
 }
 ?>
@@ -125,7 +145,7 @@ function isValid()
             <td>
                 <div class="Header bold">
                     <h1>Лабораторная работа №1 по Веб-программированию</h1>
-                    <h2>Вариант №2221</h2>
+                    <h2>Вариант №2219</h2>
                     <h3>Выполнил: Ратушняк Евгений Алексеевич</h3>
                     <h4>Группа: P3211</h4>
                 </div>
@@ -146,15 +166,15 @@ function isValid()
                                     <label for="inputX">Значение X:</label>
                                     <select name="X" id="inputX">
                                         <option disabled selected>Введите X</option>
+                                        <option value="-4">-4</option>
+                                        <option value="-3">-3</option>
                                         <option value="-2">-2</option>
-                                        <option value="-1.5">-1.5</option>
                                         <option value="-1">-1</option>
-                                        <option value="-0.5">-0.5</option>
                                         <option value="0">0</option>
-                                        <option value="0.5">0.5</option>
                                         <option value="1">1</option>
-                                        <option value="1.5">1.5</option>
                                         <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
                                     </select>
                                 </td>
                             </tr>
@@ -179,7 +199,6 @@ function isValid()
                                     <p>
                                         <input type="submit" value="Отправить"/>
                                         <input type="reset" value="Очистить"/>
-                                        <input type="hidden" name="uniqid" value="<?= uniqid() ?>">
                                     </p>
                                 </td>
                             </tr>
@@ -191,7 +210,7 @@ function isValid()
 <?php
     $err = isValid();
 
-    if(!is_null($err))
+    if(!isEmpty() && !is_null($err))
     {
         echo $err;
     }
@@ -218,73 +237,66 @@ function isValid()
 
 
                     <?php
+                    //unset($_SESSION['history']);
+                    $start = microtime(TRUE);
                     $history = (isset($_SESSION['history']) && is_array($_SESSION['history'])) ? $_SESSION['history'] : [];
-                    if (!is_null(isValid())  && isset($_GET['uniqid']))
+
+                    if (!isEmpty() && is_null(isValid()))
                     {
                         $X = floatval($_GET['X']);
                         $Y = floatval(str_ireplace(',', '.', $_GET['Y']));
                         $R = floatval(str_ireplace(',', '.', $_GET['R']));
                         $IS_SUCCESS = FALSE;
-                        $ANSWER = 'Не попадает в точку';
 
-
-                        if ($X <= 0 && $Y > 0)
+                        if ($X >= 0 && $Y >= 0)
                         {
-                            if ($Y <= $X + ($R / 2))
+                            if ($Y <= ($R - $X) / 2)
                             {
                                 $IS_SUCCESS = TRUE;
                             }
                         }
-                        elseif ($X <= 0 && $Y <= 0)
+                        elseif ($X < 0 && $Y < 0)
                         {
-                            $IS_SUCCESS = TRUE;
+                            if ($X >= -$R && $Y >= -($R/2))
+                            {
+                                $IS_SUCCESS = TRUE;
+                            }
                         }
                         elseif ($X >= 0 && $Y < 0)
                         {
-                            if ( $X **2 + $Y ** 2 <= $R **2)
+                            if ( $X **2 + $Y ** 2 <= ($R/2) **2)
                             {
                                 $IS_SUCCESS = TRUE;
                             }
-                        }
-
-                        if($IS_SUCCESS)
-                        {
-                            $ANSWER = 'Попадает в точку';
                         }
 
 
                         setlocale(LC_ALL, 'ru_RU.UTF-8');
-                        $time = strftime(' %d %b %Y %H:%M:%S', time());
-                        $script = round((microtime(true) - $start) * 10 ** 3, 3);
-                        $script = str_ireplace(",", ".", $script);
-                        $uniqid = $_GET['uniqid'];
-                        if (count($history) == 0 || $history[0]['uniqid'] !== $uniqid)
-                        {
-                            array_unshift($history,
-                                [
-                                    'X' => $X,
-                                    'Y' => $Y,
-                                    'R' => $R,
-                                    'Answer' => $ANSWER,
-                                    'time' => 0,
-                                    'script' => 0,
-                                    'uniqid' => $uniqid
-                                ]);
-                        }
+                        $time = strftime('%d %b %Y %H:%M:%S', time());
+                        $executeion_time = strval(round((microtime(TRUE) - $start) * 1e+3, 3));
+
+                        array_unshift($history, [
+                                'X'               => $X,
+                                'Y'               => $Y,
+                                'R'               => $R,
+                                'answer'          => ($IS_SUCCESS ? 'Попадает в точку' : 'Не попадает в точку'),
+                                'time'            => $time,
+                                'executeion_time' => $executeion_time,
+                        ]);
+
 
                         $_SESSION['history'] = $history;
-
                     }
 
                     foreach ($history as $result) {
                     ?>
                     <tr>
-                        <td><?= $result['X'] ?></td>
-                        <td class="word-break"><?= $result['Y'] ?></td>
-                        <td><?= $result['R'] ?></td>
-                        <td><?= $result["Ans"] ?></td>
-                        <td><?= $result["time"] ?></td>
-                        <td class="script_time"><?= $result["script"] ?></td>
+                        <td><?=  $result['X']               ?></td>
+                        <td><?=  $result['Y']               ?></td>
+                        <td><?=  $result['R']               ?></td>
+                        <td><?=  $result['answer']          ?></td>
+                        <td><?=  $result['time']            ?></td>
+                        <td><?=  $result['executeion_time'] ?></td>
                     </tr>
                     <?php
                     }
@@ -292,9 +304,6 @@ function isValid()
                 </tbody>
             </table>
         </td>
-    </tr>
-    <tr>
-        <td id="stand_deviation">Время стандартного отклонения работы скрипта: NaN мс.</td>
     </tr>
 </tbody>
 </table>
@@ -360,5 +369,6 @@ function isValid()
     }
 
 </script>
+
 </body>
 </html>
