@@ -1,3 +1,49 @@
+
+<?php session_start(); ?>
+<?php
+function isEmpty()
+{
+    return (!isset($_GET['X']) && !isset($_GET['Y']) && !isset($_GET['R']));
+}
+
+function isValid()
+{
+    if(isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R']))
+    {
+        $X = $_GET['X'];
+        $Y = str_ireplace(',','.', $_GET['Y']);
+        $R = str_ireplace(',','.', $_GET['R']);
+        if (!is_numeric($X))
+        {
+            return '<p id="error">X не число!</p>';
+        }
+        elseif (!is_numeric($Y))
+        {
+            return '<p id="error">Y не числo!</p>';
+        }
+        elseif (!is_numeric($R))
+        {
+            return '<p id="error">R не число!</p>';
+        }
+
+
+        if(!(-5 < $Y && $Y < 3))
+        {
+            return '<p id="error">Y не входит в диапозон (-5; 3)!</p>';
+        }
+
+        if(!(2 < $R && $R < 5))
+        {
+            return '<p id="error">R не входит в диапозон (2; 5)!</p>';
+        }
+    }
+    else
+    {
+        return '<p id="error">Не заданы все параметры: X,Y,R</p>';
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,10 +58,10 @@
             <h2 class="head-label">WebProgramming</h2>
             <ul class="menu">
                 <li>
-                    <a href="#">User</a>
+                    <a href="https://github.com/TimeToStop">User</a>
                 </li>
                 <li>
-                    <a href="#">Group</a>
+                    <a href="https://isu.ifmo.ru/pls/apex/f?p=2143:GR:120853349933398::NO::GR_GR,GR_DATE,GR_TYPE:p3211,01.09.2020,group">Group</a>
                 </li>
                 <li>
                     <a href="https://www.google.com/">Other</a>
@@ -71,6 +117,7 @@
                 </div>
             </div>
             <div class="center-buttons">
+                <input type ="hidden" name="uniqid" value="<?= uniqid()?>"/>
                 <input class="button" type="submit" value="Отправить"/>
                 <input class="button" type="reset" value="Очистить"/>
             </div>
@@ -81,26 +128,90 @@
 </div>
 <div class="table">
     <div class="content">
-        <div class="result-container">
-            <div class="result">
-                <div>
-                    <img src="https://se.ifmo.ru/~s284705/pic.php"/>
-                </div>
-                <div class="frame-data">
-                    <h5 class="result-header">Попал в точку</h5>
-                    <div class="result-data">
-                        <p>X = 0</p>
-                        <p>Y = 0</p>
-                        <p>R = 0</p>
-                        <p>Execution Time 0s</p>
-                    </div>
-                    <div class="date">
-                        <span>25 Jan 2015</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table>
+            <tr>
+                <td>X</td>
+                <td>Y</td>
+                <td>R</td>
+                <td>Ответ</td>
+                <td>Время</td>
+                <td>Время работы скрипта (в мс)</td>
+            </tr>
+
+            <?php
+//            unset($_SESSION['history']);
+            $start = microtime(TRUE);
+            $history = (isset($_SESSION['history']) && is_array($_SESSION['history'])) ? $_SESSION['history'] : [];
+
+            if (!isEmpty() && is_null(isValid()) && isset($_GET['uniqid']))
+            {
+                $uniqid = $_GET['uniqid'];
+                $X = floatval($_GET['X']);
+                $Y = floatval(str_ireplace(',', '.', $_GET['Y']));
+                $R = floatval(str_ireplace(',', '.', $_GET['R']));
+                $IS_SUCCESS = FALSE;
+
+                if ($X >= 0 && $Y >= 0)
+                {
+                    if ($Y <= ($R - $X) / 2)
+                    {
+                        $IS_SUCCESS = TRUE;
+                    }
+                }
+                elseif ($X < 0 && $Y < 0)
+                {
+                    if ($X >= -$R && $Y >= -($R/2))
+                    {
+                        $IS_SUCCESS = TRUE;
+                    }
+                }
+                elseif ($X >= 0 && $Y < 0)
+                {
+                    if ( $X **2 + $Y ** 2 <= ($R/2) **2)
+                    {
+                        $IS_SUCCESS = TRUE;
+                    }
+                }
+
+
+                setlocale(LC_ALL, 'ru_RU.UTF-8');
+                $time = strftime('%d %b %Y %H:%M:%S', time());
+                $executeion_time = strval(round((microtime(TRUE) - $start) * 1e+3, 3));
+
+                if(count($history) == 0 || $history[0]['uniqid'] !== $uniqid)
+                {
+                    array_unshift($history, [
+                        'X'               => $X,
+                        'Y'               => $Y,
+                        'R'               => $R,
+                        'answer'          => ($IS_SUCCESS ? 'Попадает в точку' : 'Не попадает в точку'),
+                        'time'            => $time,
+                        'executeion_time' => $executeion_time,
+                        'uniqid'          =>  $uniqid
+                    ]);
+
+                }
+
+                $_SESSION['history'] = $history;
+            }
+
+            foreach ($history as $result) {
+                ?>
+                <tr>
+                    <td><?=  $result['X']               ?></td>
+                    <td><?=  $result['Y']               ?></td>
+                    <td><?=  $result['R']               ?></td>
+                    <td><?=  $result['answer']          ?></td>
+                    <td><?=  $result['time']            ?></td>
+                    <td><?=  $result['executeion_time'] ?></td>
+                </tr>
+                <?php
+            }
+            ?>
+        </table>
     </div>
 </div>
+<script src="js/main.js">
+</script>
 </body>
 </html>
