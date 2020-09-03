@@ -81,7 +81,7 @@ function isValid()
 </div>
 <div class="coord">
     <div class="content">
-        <img class="image" src="img/coord.png"/>
+        <img class="image" src="https://se.ifmo.ru/~s284705/pic.php"/>
     </div>
 </div>
 <div class="form">
