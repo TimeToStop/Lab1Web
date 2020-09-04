@@ -15,6 +15,7 @@ class Image
 
 public:
 	Image(int w, int h);
+	Image(const std::string&);
 	~Image();
 
 	int width() const;
@@ -25,7 +26,9 @@ public:
 	void setPixel(int, int, const Color&);
 	Color getPixel(int, int);
 
-
 	bool save(const std::string&);
+
+private:
+	void init(const std::string&);
 };
 

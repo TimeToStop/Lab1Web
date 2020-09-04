@@ -2,92 +2,158 @@
 
 #include "painter/painter.h"
 
-int size = 240;
-int half_size = (size >> 1);
-int step = size / 6;
+// Image Info
+const int size = 240;
 
-void drawGrid(Painter& painter);
-void drawGraph(Painter& painter);
+int y_rad_dataX = 119;
 
-void drawRect(Painter& painter);
-void drawSemiCircle(Painter& painter);
-void drawTriangle(Painter& painter);
+int y_plus_radY = 26;
+int y_plus_radHalfY = 69;
+int y_minus_radHalfY = 154;
+int y_minus_radY = 198;
 
-int main()
+int x_rad_dataY = 100;
+
+int x_minus_radX = 15;
+int x_minus_radHalfX = 58;
+int x_plus_radHalfX = 149;
+int x_plus_radX = 192;
+
+
+void make_image(float x, float y, float r);
+
+bool valid(const char*);
+std::string value(float);
+
+int main(int argc, char* argv[])
 {
-	Color white(0x66);
-	Image img(size, size);
-	Painter painter(img);
-	img.fill(white);
-	drawGraph(painter);
-	drawGrid(painter);
-	img.save("test.bmp");
+	if (argc == 4)
+	{
+		std::string x(argv[1]), y(argv[2]), r(argv[3]);
+
+		if (valid(argv[1]) && valid(argv[2]) && valid(argv[3]))
+		{
+			float xf = std::stof(x);
+			float yf = std::stof(y);
+			float rf = std::stof(r);
+
+			if (rf < 0)
+			{
+				std::cout << "Bad input: negative radius" << std::endl;
+				return -3;
+			}
+
+			make_image(xf, yf, rf);
+		}
+		else
+		{
+			std::cout << "Bad input: not a float number" << std::endl;
+			return -2;
+		}
+	}
+	else
+	{
+		std::cout << "Bad input, expected: x y r" << std::endl;
+		return -1;
+	}
+
 	return 0;
 }
 
-void drawGrid(Painter& painter)
+void make_image(float x, float y, float r)
 {
-	painter.setColor(Color(0));
+	// Init image
+	Image img("coord.bmp");
+	Painter painter(img);
 
-	painter.drawHorizontalLine(half_size);
-	painter.drawVerticalLine(half_size);
+	// Draw Radius
 
-	for (int i = step; i < size; i += step)
+	std::string rad = value(r);
+	std::string half_rad = value(r/2);
+
+	std::string m_rad = value(-r);
+	std::string m_half_rad = value(-r / 2);
+	
+
+	painter.drawImageByStringCode(x_minus_radX,		x_rad_dataY, m_rad);
+	painter.drawImageByStringCode(x_minus_radHalfX,	x_rad_dataY, m_half_rad);
+	painter.drawImageByStringCode(x_plus_radHalfX,	x_rad_dataY, half_rad);
+	painter.drawImageByStringCode(x_plus_radX,		x_rad_dataY, rad);
+
+
+	painter.drawImageByStringCode(y_rad_dataX, y_minus_radY, m_rad);
+	painter.drawImageByStringCode(y_rad_dataX, y_minus_radHalfY, m_half_rad);
+	painter.drawImageByStringCode(y_rad_dataX, y_plus_radHalfY, half_rad);
+	painter.drawImageByStringCode(y_rad_dataX, y_plus_radY, rad);
+
+
+	// Draw circle
+	const float mult = 85.f/r;
+
+	int px_x = 116 + (int)ceil(x * mult);
+	int px_y = 116 - (int)ceil(y * mult);
+
+	painter.setColor(Color(0xFF, 0, 0));
+
+	if (px_x >= 0 && px_x < size && px_y >= 0 && px_y < size)
 	{
-		painter.drawHorizontalLine(i, half_size - 5, half_size + 5);
+		painter.drawCircle(px_x, px_y, 2);
 	}
-
-	for (int i = step; i < size; i += step)
+	else
 	{
-		painter.drawVerticalLine(i, half_size - 5, half_size + 5);
+		painter.drawImageByStringCode(10, 10, "e");
 	}
+	 
+	img.save("res.bmp");
 }
 
-void drawGraph(Painter& painter)
+bool valid(const char* str)
 {
-	painter.setColor(Color(0, 0, 0xFF));
+	bool has_dot = false;
 
-	drawRect(painter);
-	drawSemiCircle(painter);
-	drawTriangle(painter);
-}
-
-void drawRect(Painter& painter)
-{
-	for (int i = step; i < half_size; i += 1)
+	if (*str == '-')
 	{
-		for (int j = half_size; j < (step << 2); j++)
+		str++;
+	}
+
+	for (const char* it = str; *it != 0; it++)
+	{
+		if (*it == ',' || *it == '.')
 		{
-			painter.drawPixel(i, j);
+			if (has_dot)
+			{
+				return false;
+			}
+			else
+			{
+				has_dot = true;
+			}
+		}
+		else if (!('0' <= *it && *it <= '9'))
+		{
+			return false;
 		}
 	}
+
+	return true;
 }
 
-void drawSemiCircle(Painter& painter)
+std::string value(float value)
 {
-	for (int i = 0; i <= step; i++)
-	{
-		int j_max = (int)floor(sqrt(static_cast<double>(step) * step - static_cast<double>(i) * i));
+	int count_minus = 0;
+	std::string s = std::to_string(value);
 
-		for (int j = 0; j <= j_max; j++)
-		{
-			painter.drawPixel(half_size + i, half_size + j);
-		}
+	if (s.size() >= 3)
+	{
+		return std::string(s.begin(), s.begin() + 3 + (int)(s[0] == '-'));
+	}
+	else if (s.size() == 2)
+	{
+		return std::string(s.begin(), s.begin() + 1);
+	}
+	else
+	{
+		return std::string("0.0");
 	}
 }
 
-void drawTriangle(Painter& painter)
-{
-	int dest = half_size + (step << 1);
-	float k = 0.5, b = step >> 1;
-
-	for (int i = half_size; i < dest; i++)
-	{
-		int min_y = (int)floor(static_cast<double>(i) * k + b);
-
-		for (int j = min_y; j <= half_size; j++)
-		{
-			painter.drawPixel(i, j);
-		}
-	}
-}

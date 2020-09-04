@@ -15,9 +15,16 @@ void Painter::setColor(const Color& color)
 	m_color = color;
 }
 
-void Painter::drawFloatString(int x, int y, const std::string& value)
+void Painter::drawImageByStringCode(int x, int y, const std::string& value)
 {
-}
+	const int w = m_font[0]->width();
+
+	for (char c : value)
+	{
+		draw(x, y, c);
+		x += w;
+	}
+} 
 
 void Painter::drawHorizontalLine(int row)
 {
@@ -79,33 +86,77 @@ void Painter::drawCircle(int x, int y, int radius)
 
 		for (int j = 0; j <= j_max; j++)
 		{
-			m_image.setPixel(x + i, x + j, m_color);
-			m_image.setPixel(x + i, x - j, m_color);
-			m_image.setPixel(x - i, x + j, m_color);
-			m_image.setPixel(x - i, x - j, m_color);
+			m_image.setPixel(x + i, y + j, m_color);
+			m_image.setPixel(x + i, y - j, m_color);
+			m_image.setPixel(x - i, y + j, m_color);
+			m_image.setPixel(x - i, y - j, m_color);
 		}
 	}
 }
 
-void Painter::drawDigitOrDot(int x, int y, char c)
+void Painter::draw(int x, int y, char c)
 {
+	if ('0' <= c && c <= '9')
+	{
+		drawImage(x, y, c - '0');
+	}
+	else if (c == ',' || c == '.')
+	{
+		drawImage(x, y, 10);
+	}
+	else if (c == '-')
+	{
+		drawImage(x, y, 11);
+	}
+	else if (c == 'e')
+	{
+		drawImage(x, y, 12);
+	}
+	else
+	{
+		throw std::exception("Bad image code");
+	}
+}
+
+void Painter::drawImage(int x, int y, size_t index)
+{
+	const std::unique_ptr<Image>& img = m_font[index];
+
+	for (int i = 0; i < img->height(); i++)
+	{
+		for (int j = 0; j < img->width(); j++)
+		{
+			Color c = img->getPixel(j, i);
+
+			if (c.r() == 0 && c.b() == 0 && c.g() ==0)
+			{
+				drawPixel(x + j, y + i);
+			}
+		}
+	}
 }
 
 void Painter::initFont()
 { 
-	m_font.insert({ '0', 
-	{ 
-		{0, 0},
-		{1, 1}
-	}});
+	m_font.push_back(std::make_unique<Image>("font/0.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/1.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/2.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/3.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/4.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/5.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/6.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/7.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/8.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/9.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/dot.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/minus.bmp"));
+	m_font.push_back(std::make_unique<Image>("font/error.bmp"));
 
-	m_font.insert({ '1', { {}, {}} });
-	m_font.insert({ '2', { {}, {}} });
-	m_font.insert({ '3', { {}, {}} });
-	m_font.insert({ '4', { {}, {}} });
-	m_font.insert({ '5', { {}, {}} });
-	m_font.insert({ '6', { {}, {}} });
-	m_font.insert({ '7', { {}, {}} });
-	m_font.insert({ '8', { {}, {}} });
-	m_font.insert({ '9', { {}, {}} });
+	for (const auto& e : m_font)
+	{
+		if (e->width() == 0)
+		{
+			throw std::exception("Cannot read all fonts images");
+		}
+	}
 }

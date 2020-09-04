@@ -20,6 +20,14 @@ Image::Image(int w, int h):
     }
 }
 
+Image::Image(const std::string& file_name):
+    m_width(0),
+    m_height(0),
+    m_color_map(nullptr)
+{
+    init(file_name); 
+}
+
 Image::~Image()
 {
     for (int i = 0; i < m_height; i++)
@@ -119,4 +127,44 @@ bool Image::save(const std::string& file_path)
     }
 
     return false;
+}
+
+void Image::init(const std::string& str)
+{
+    std::ifstream in(str, std::ios::in | std::ios::binary);
+
+    if (in.is_open())
+    {
+        BITMAPFILEHEADER file;
+        BITMAPINFOHEADER header;
+
+        in.read((char*)&file, sizeof(BITMAPFILEHEADER));
+        in.read((char*)&header, sizeof(BITMAPINFOHEADER));
+
+        int w = header.biWidth, h = header.biHeight, c = header.biBitCount >> 3;
+        
+        if (c == 3)
+        {
+            int size = w * h * c;
+            byte* data = new byte[size];
+            in.read((char*)data, size);
+            
+            m_width = w;
+            m_height = h;
+            m_color_map = new Color*[h];
+
+            for (int i = 0; i < h; i++)
+            {
+                m_color_map[i] = new Color[w];
+
+                for (int j = 0; j < w; j++)
+                {
+                    int index = c * ((h - i - 1) * w + j);
+                    m_color_map[i][j] = Color(data[index + 2], data[index + 1], data[index]);
+                }
+            }
+
+            delete[] data;
+        }
+    }
 }

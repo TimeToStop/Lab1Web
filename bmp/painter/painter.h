@@ -5,7 +5,7 @@
 
 class Painter
 {
-	std::map<char, std::vector<std::pair<int, int>>> m_font;
+	std::vector<std::unique_ptr<Image>> m_font;
 
 	Color m_color;
 	Image& m_image;
@@ -16,7 +16,7 @@ public:
 
 	void setColor(const Color&);
 
-	void drawFloatString(int x, int y, const std::string& value);
+	void drawImageByStringCode(int x, int y, const std::string& value);
 	void drawHorizontalLine(int row);
 	void drawHorizontalLine(int row, int start, int end);
 	void drawVerticalLine(int column);
@@ -26,6 +26,7 @@ public:
 
 private:
 	void initFont();
-	void drawDigitOrDot(int x, int y, char c);
+	void draw(int x, int y, char c);
+	void drawImage(int x, int y, size_t index);
 };
 
