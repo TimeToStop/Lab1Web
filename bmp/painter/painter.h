@@ -1,6 +1,6 @@
 #pragma once
 #include "../writer/image.h"
-
+#include <stdexcept>
 #include <map>
 
 class Painter

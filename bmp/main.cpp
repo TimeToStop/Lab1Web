@@ -1,7 +1,9 @@
 #include <iostream>
 
-#include "painter/painter.h"
+#include <math.h>
 
+#include "painter/painter.h"
+#include "writer/bmp.h"
 // Image Info
 const int size = 240;
 

@@ -1,7 +1,8 @@
 #include "image.h"
 
-#include <windows.h>
+#include "bmp.h"
 #include <fstream>
+#include <cstring>
 
 Image::Image(int w, int h):
     m_width(w),
@@ -11,7 +12,7 @@ Image::Image(int w, int h):
     if ((m_width & 0b11) != 0)
     {
         delete[] m_color_map;
-        throw std::exception("Width of page must be multiple of four");
+        throw std::runtime_error("Width of page must be multiple of four");
     }
 
     for (int i = 0; i < m_height; i++)
@@ -83,26 +84,19 @@ bool Image::save(const std::string& file_path)
 
     if (file.is_open())
     {
-        BITMAPFILEHEADER tWBFH;
-        memset(&tWBFH, 0, sizeof(BITMAPFILEHEADER));
-        tWBFH.bfType = 0x4d42;
-        tWBFH.bfSize = 14 + 40 + (m_width * m_height * 3);
-        tWBFH.bfReserved1 = 0;
-        tWBFH.bfReserved2 = 0;
-        tWBFH.bfOffBits = 14 + 40;
+	BMP bmp;
+	memset(&bmp, 0, sizeof(BMP));
 
-        BITMAPINFOHEADER tW2BH;
-        memset(&tW2BH, 0, 40);
-        tW2BH.biSize = 40;
-        tW2BH.biWidth = m_width;
-        tW2BH.biHeight = m_height;
-        tW2BH.biPlanes = 1;
-        tW2BH.biBitCount = 24;
-        tW2BH.biCompression = 0;
+	bmp.header = 0x4d42;
+	bmp.size = sizeof(BMP) + (m_width * m_height * 3);
+	bmp.offset = sizeof(BMP);
+	bmp.sizeOfBitMap = 40;
+	bmp.width = m_width;
+	bmp.height = m_height;
+	bmp.planes = 1;
+	bmp.bpp = 24;
 
-
-        file.write((char*)&tWBFH, sizeof(BITMAPFILEHEADER));
-        file.write((char*)&tW2BH, sizeof(BITMAPINFOHEADER));
+        file.write((char*)&bmp, sizeof(BMP));
         
         char color_data[3] = { 0 };
 
@@ -135,13 +129,11 @@ void Image::init(const std::string& str)
 
     if (in.is_open())
     {
-        BITMAPFILEHEADER file;
-        BITMAPINFOHEADER header;
+	BMP bmp = {0};
 
-        in.read((char*)&file, sizeof(BITMAPFILEHEADER));
-        in.read((char*)&header, sizeof(BITMAPINFOHEADER));
+        in.read((char*)&bmp, sizeof(BMP));
 
-        int w = header.biWidth, h = header.biHeight, c = header.biBitCount >> 3;
+        int w = bmp.width, h = bmp.height, c = bmp.bpp >> 3;
         
         if (c == 3)
         {
