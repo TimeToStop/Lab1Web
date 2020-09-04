@@ -28,10 +28,12 @@ void make_image(float x, float y, float r);
 bool valid(const char*);
 std::string value(float);
 float floatVal(const std::string&);
-std::string to_string(float);
+std::string toString(float);
 
 int main(int argc, char* argv[])
 {
+	std::cout << floatVal("1") << std::endl;
+
 	if (argc == 4)
 	{
 		std::string x(argv[1]), y(argv[2]), r(argv[3]);
@@ -79,6 +81,10 @@ void make_image(float x, float y, float r)
 	std::string m_rad = value(-r);
 	std::string m_half_rad = value(-r / 2);
 	
+	std::cout << rad << std::endl;
+	std::cout << half_rad << std::endl;
+	std::cout << m_rad << std::endl;
+	std::cout << m_half_rad << std::endl;
 
 	painter.drawImageByStringCode(x_minus_radX,		x_rad_dataY, m_rad);
 	painter.drawImageByStringCode(x_minus_radHalfX,	x_rad_dataY, m_half_rad);
@@ -145,33 +151,47 @@ bool valid(const char* str)
 
 std::string value(float value)
 {
-	int count_minus = 0;
-	std::string s = to_string(value);
+	std::string s = toString(value);
 
-	if (s.size() >= 3)
+	if (s.size())
 	{
-		return std::string(s.begin(), s.begin() + 3 + (int)(s[0] == '-'));
-	}
-	else if (s.size() == 2)
-	{
-		return std::string(s.begin(), s.begin() + 1);
+		size_t index = 0;
+
+		if (s.find('.') != std::string::npos
+			|| s.find(',') != std::string::npos)
+		{
+			return std::string(s.begin(), s.begin() + 3 + (int)(s[0] == '-'));
+		}
+		else
+		{
+			return s + ".0";
+		}
 	}
 	else
 	{
-		return std::string("0.0");
+		return "0.0";
 	}
 }
 
 float floatVal(const std::string& s)
 {
+	int value;
 	float r;
 	std::stringstream ss;
 	ss << s;
-	ss >> r;
-	return r;
+	ss >> value;
+	if (value == 0)
+	{
+		ss >> r;
+		return r;
+	}
+	else
+	{
+		return value;
+	}
 }
 
-std::string to_string(float value)
+std::string toString(float value)
 {
 	std::stringstream ss;
 	ss << value;

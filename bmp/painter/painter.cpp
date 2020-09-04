@@ -1,6 +1,7 @@
 #include "painter.h"
 
 #include <math.h>
+#include <iostream>
 
 Painter::Painter(Image& img):
 	m_image(img)
@@ -120,7 +121,7 @@ void Painter::draw(int x, int y, char c)
 	}
 	else
 	{
-		throw std::runtime_error("Bad image code");
+		exit(-1);
 	}
 }
 
@@ -160,9 +161,11 @@ void Painter::initFont()
 
 	for (size_t i = 0; i < m_font.size(); i++)
 	{
+		std::cout << m_font[i]->width() << std::endl;
+
 		if (m_font[i]->width() == 0)
 		{
-			throw std::runtime_error("Cannot read all fonts images");
+			exit(-1);
 		}
 	}
 }

@@ -1,18 +1,20 @@
 #include "image.h"
 
 #include "bmp.h"
-#include <fstream>
+#include <stdio.h>
 #include <cstring>
+
+#include <iostream>
 
 Image::Image(int w, int h) :
     m_width(w),
     m_height(h),
     m_color_map(new Color* [h])
 {
-    if ((m_width & 0b11) != 0)
+    if ((m_width & 4) != 0)
     {
         delete[] m_color_map;
-        throw std::runtime_error("Width of page must be multiple of four");
+        exit(-1);
     }
 
     int i = 0;
@@ -33,14 +35,14 @@ Image::Image(int w, int h) :
 
         delete[] m_color_map;
 
-        throw std::runtime_error("Out of memory!");
+        exit(-1);
     }
 }
 
 Image::Image(const std::string& file_name):
     m_width(0),
     m_height(0),
-    m_color_map(nullptr)
+    m_color_map(0)
 {
     init(file_name); 
 }
@@ -96,9 +98,9 @@ Color Image::getPixel(int i, int j)
 
 bool Image::save(const std::string& file_path)
 {
-    std::ofstream file(file_path, std::ios::out | std::ios::binary);
+    FILE* f = fopen(file_path.c_str(), "wb");
 
-    if (file.is_open())
+    if (f != 0)
     {
 	BMP bmp;
 	memset(&bmp, 0, sizeof(BMP));
@@ -112,7 +114,9 @@ bool Image::save(const std::string& file_path)
 	bmp.planes = 1;
 	bmp.bpp = 24;
 
-        file.write((char*)&bmp, sizeof(BMP));
+        fwrite(&bmp, sizeof(BMP), 1, f);
+
+        std::cout << "Start write image data (w, h):" << width() << " " << height() << std::endl;
         
         char color_data[3] = { 0 };
 
@@ -124,12 +128,7 @@ bool Image::save(const std::string& file_path)
                 color_data[1] = m_color_map[i][j].g();
                 color_data[2] = m_color_map[i][j].r();
 
-                file.write(color_data, sizeof(color_data));
-
-                if (!file.good())
-                {
-                    return false;
-                }
+                fwrite(color_data, 3 *sizeof(char), 1, f);
             }
         }
 
@@ -141,13 +140,13 @@ bool Image::save(const std::string& file_path)
 
 void Image::init(const std::string& str)
 {
-    std::ifstream in(str, std::ios::in | std::ios::binary);
+    FILE* f = fopen(str.c_str(), "rb");
 
-    if (in.is_open())
+    if (f != 0)
     {
-	BMP bmp = {0};
+	    BMP bmp = {0};
 
-        in.read((char*)&bmp, sizeof(BMP));
+        fread(&bmp, sizeof(BMP), 1, f);
 
         int w = bmp.width, h = bmp.height, c = bmp.bpp >> 3;
         
@@ -155,7 +154,7 @@ void Image::init(const std::string& str)
         {
             int size = w * h * c;
             byte* data = new byte[size];
-            in.read((char*)data, size);
+            fread(data, sizeof(byte), size, f);
             
             m_width = w;
             m_height = h;
