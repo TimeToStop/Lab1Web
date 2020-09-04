@@ -1,9 +1,10 @@
 #pragma once
 
-#pragma pack(push, 1)
 
 typedef unsigned short WORD;
 typedef unsigned int   DWORD;
+
+#pragma pack(push, 1)
 
 struct BMP
 {

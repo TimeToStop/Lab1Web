@@ -5,7 +5,7 @@
 
 class Painter
 {
-	std::vector<std::unique_ptr<Image>> m_font;
+	std::vector<Image*> m_font;
 
 	Color m_color;
 	Image& m_image;

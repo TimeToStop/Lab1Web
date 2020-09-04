@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <math.h>
+#include <sstream>
 
 #include "painter/painter.h"
 #include "writer/bmp.h"
@@ -26,6 +27,8 @@ void make_image(float x, float y, float r);
 
 bool valid(const char*);
 std::string value(float);
+float floatVal(const std::string&);
+std::string to_string(float);
 
 int main(int argc, char* argv[])
 {
@@ -35,9 +38,9 @@ int main(int argc, char* argv[])
 
 		if (valid(argv[1]) && valid(argv[2]) && valid(argv[3]))
 		{
-			float xf = std::stof(x);
-			float yf = std::stof(y);
-			float rf = std::stof(r);
+			float xf = floatVal(x);
+			float yf = floatVal(y);
+			float rf = floatVal(r);
 
 			if (rf < 0)
 			{
@@ -143,7 +146,7 @@ bool valid(const char* str)
 std::string value(float value)
 {
 	int count_minus = 0;
-	std::string s = std::to_string(value);
+	std::string s = to_string(value);
 
 	if (s.size() >= 3)
 	{
@@ -159,3 +162,18 @@ std::string value(float value)
 	}
 }
 
+float floatVal(const std::string& s)
+{
+	float r;
+	std::stringstream ss;
+	ss << s;
+	ss >> r;
+	return r;
+}
+
+std::string to_string(float value)
+{
+	std::stringstream ss;
+	ss << value;
+	return ss.str();
+}

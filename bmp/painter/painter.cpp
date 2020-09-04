@@ -10,6 +10,10 @@ Painter::Painter(Image& img):
 
 Painter::~Painter()
 {
+	for (size_t i = 0; i < m_font.size(); i++)
+	{
+		delete m_font[i];
+	}
 }
 
 void Painter::setColor(const Color& color)
@@ -21,9 +25,9 @@ void Painter::drawImageByStringCode(int x, int y, const std::string& value)
 {
 	const int w = m_font[0]->width();
 
-	for (char c : value)
+	for (size_t i = 0; i < value.size(); i++)
 	{
-		draw(x, y, c);
+		draw(x, y, value[i]);
 		x += w;
 	}
 } 
@@ -122,7 +126,7 @@ void Painter::draw(int x, int y, char c)
 
 void Painter::drawImage(int x, int y, size_t index)
 {
-	const std::unique_ptr<Image>& img = m_font[index];
+	Image* img = m_font[index];
 
 	for (int i = 0; i < img->height(); i++)
 	{
@@ -140,23 +144,23 @@ void Painter::drawImage(int x, int y, size_t index)
 
 void Painter::initFont()
 { 
-	m_font.push_back(std::make_unique<Image>("font/0.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/1.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/2.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/3.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/4.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/5.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/6.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/7.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/8.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/9.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/dot.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/minus.bmp"));
-	m_font.push_back(std::make_unique<Image>("font/error.bmp"));
+	m_font.push_back(new Image("font/0.bmp"));
+	m_font.push_back(new Image("font/1.bmp"));
+	m_font.push_back(new Image("font/2.bmp"));
+	m_font.push_back(new Image("font/3.bmp"));
+	m_font.push_back(new Image("font/4.bmp"));
+	m_font.push_back(new Image("font/5.bmp"));
+	m_font.push_back(new Image("font/6.bmp"));
+	m_font.push_back(new Image("font/7.bmp"));
+	m_font.push_back(new Image("font/8.bmp"));
+	m_font.push_back(new Image("font/9.bmp"));
+	m_font.push_back(new Image("font/dot.bmp"));
+	m_font.push_back(new Image("font/minus.bmp"));
+	m_font.push_back(new Image("font/error.bmp"));
 
-	for (const auto& e : m_font)
+	for (size_t i = 0; i < m_font.size(); i++)
 	{
-		if (e->width() == 0)
+		if (m_font[i]->width() == 0)
 		{
 			throw std::runtime_error("Cannot read all fonts images");
 		}

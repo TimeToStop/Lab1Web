@@ -4,10 +4,10 @@
 #include <fstream>
 #include <cstring>
 
-Image::Image(int w, int h):
+Image::Image(int w, int h) :
     m_width(w),
     m_height(h),
-    m_color_map(new Color*[h])
+    m_color_map(new Color* [h])
 {
     if ((m_width & 0b11) != 0)
     {
@@ -15,9 +15,25 @@ Image::Image(int w, int h):
         throw std::runtime_error("Width of page must be multiple of four");
     }
 
-    for (int i = 0; i < m_height; i++)
+    int i = 0;
+
+    try
     {
-        m_color_map[i] = new Color[w];
+        for (; i < m_height; i++)
+        {
+            m_color_map[i] = new Color[w];
+        }
+    }
+    catch (const std::bad_alloc& e)
+    {
+        for (int j = i - 1; j >= 0; j--)
+        {
+            delete m_color_map[j];
+        }
+
+        delete[] m_color_map;
+
+        throw std::runtime_error("Out of memory!");
     }
 }
 
