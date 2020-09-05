@@ -5,35 +5,39 @@
 
 #include "painter/painter.h"
 #include "writer/bmp.h"
+
+
 // Image Info
 const int size = 240;
 
-int y_rad_dataX = 119;
 
-int y_plus_radY = 26;
-int y_plus_radHalfY = 69;
-int y_minus_radHalfY = 154;
-int y_minus_radY = 198;
 
-int x_rad_dataY = 100;
+const int y_rad_dataX			= 119;
 
-int x_minus_radX = 15;
-int x_minus_radHalfX = 58;
-int x_plus_radHalfX = 149;
-int x_plus_radX = 192;
+const int y_plus_radY			= 26;
+const int y_plus_radHalfY		= 69;
+const int y_minus_radHalfY		= 154;
+const int y_minus_radY			= 198;
+
+
+
+const int x_rad_dataY			= 100;
+
+const int x_minus_radX			= 15;
+const int x_minus_radHalfX		= 58;
+const int x_plus_radHalfX		= 149;
+const int x_plus_radX			= 192;
 
 
 void make_image(float x, float y, float r);
 
-bool valid(const char*);
-std::string value(float);
-float floatVal(const std::string&);
+bool		valid	(const char*);
+std::string value	(float);
+float		floatVal(const std::string&);
 std::string toString(float);
 
 int main(int argc, char* argv[])
 {
-	std::cout << floatVal("1") << std::endl;
-
 	if (argc == 4)
 	{
 		std::string x(argv[1]), y(argv[2]), r(argv[3]);
@@ -49,8 +53,22 @@ int main(int argc, char* argv[])
 				std::cout << "Bad input: negative radius" << std::endl;
 				return -3;
 			}
-
-			make_image(xf, yf, rf);
+			
+			try 
+			{
+				make_image(xf, yf, rf);
+			}
+			catch (const std::runtime_error& e)
+			{
+				std::cout << e.what() << std::endl;
+				return -4;
+			}
+			catch (const std::out_of_range& e)
+			{
+				std::cout << "Critacal error: " << std::endl;
+				std::cout << e.what() << std::endl;
+				return -5;
+			}
 		}
 		else
 		{
@@ -74,7 +92,6 @@ void make_image(float x, float y, float r)
 	Painter painter(img);
 
 	// Draw Radius
-
 	std::string rad = value(r);
 	std::string half_rad = value(r/2);
 
@@ -86,17 +103,16 @@ void make_image(float x, float y, float r)
 	std::cout << m_rad << std::endl;
 	std::cout << m_half_rad << std::endl;
 
-	painter.drawImageByStringCode(x_minus_radX,		x_rad_dataY, m_rad);
-	painter.drawImageByStringCode(x_minus_radHalfX,	x_rad_dataY, m_half_rad);
-	painter.drawImageByStringCode(x_plus_radHalfX,	x_rad_dataY, half_rad);
-	painter.drawImageByStringCode(x_plus_radX,		x_rad_dataY, rad);
+	painter.drawFloatString(x_minus_radX,		x_rad_dataY, m_rad);
+	painter.drawFloatString(x_minus_radHalfX,	x_rad_dataY, m_half_rad);
+	painter.drawFloatString(x_plus_radHalfX,	x_rad_dataY, half_rad);
+	painter.drawFloatString(x_plus_radX,		x_rad_dataY, rad);
 
 
-	painter.drawImageByStringCode(y_rad_dataX, y_minus_radY, m_rad);
-	painter.drawImageByStringCode(y_rad_dataX, y_minus_radHalfY, m_half_rad);
-	painter.drawImageByStringCode(y_rad_dataX, y_plus_radHalfY, half_rad);
-	painter.drawImageByStringCode(y_rad_dataX, y_plus_radY, rad);
-
+	painter.drawFloatString(y_rad_dataX, y_minus_radY,		m_rad);
+	painter.drawFloatString(y_rad_dataX, y_minus_radHalfY,	m_half_rad);
+	painter.drawFloatString(y_rad_dataX, y_plus_radHalfY,	half_rad);
+	painter.drawFloatString(y_rad_dataX, y_plus_radY,		rad);
 
 	// Draw circle
 	const float mult = 85.f/r;
@@ -112,7 +128,7 @@ void make_image(float x, float y, float r)
 	}
 	else
 	{
-		painter.drawImageByStringCode(10, 10, "e");
+		painter.drawError(10, 10);
 	}
 	 
 	img.save("res.bmp");

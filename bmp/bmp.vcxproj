@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="painter\painter.h" />
+    <ClInclude Include="pointer.h" />
     <ClInclude Include="writer\bmp.h" />
     <ClInclude Include="writer\color.h" />
     <ClInclude Include="writer\image.h" />

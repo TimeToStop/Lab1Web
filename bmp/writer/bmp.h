@@ -9,7 +9,7 @@ typedef unsigned int   DWORD;
 struct BMP
 {
 	WORD header;
-	DWORD size;
+	DWORD sizeOfFile;
 	WORD reserved1;
 	WORD reserved2;
 	DWORD offset;
@@ -23,7 +23,7 @@ struct BMP
 	DWORD hResolution;
 	DWORD vResolution;
 	DWORD numberOfColors;
-	DWORD numberOfImportantColors;	
+	DWORD numberOfImportantColors;
 };
 
 #pragma pack(pop)

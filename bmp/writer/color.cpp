@@ -16,7 +16,7 @@ Color::Color(byte v) :
 {
 }
 
-Color::Color(byte r, byte g, byte b, byte a):
+Color::Color(byte r, byte g, byte b):
     m_r(r),
     m_g(g),
     m_b(b)

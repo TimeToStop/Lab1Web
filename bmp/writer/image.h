@@ -1,9 +1,8 @@
 #pragma once
-#include <string>
-
 #include "color.h"
+#include "../pointer.h"
 
-#include <memory>
+#include <string>
 #include <vector>
 
 class Image
@@ -11,7 +10,7 @@ class Image
 	int m_width;
 	int m_height;
 
-	Color** m_color_map;
+	std::vector<std::vector<Pointer<Color>>> m_color_map;
 
 public:
 	Image(int w, int h);
@@ -20,15 +19,16 @@ public:
 
 	int width() const;
 	int height() const;
-
-	void fill(const Color&);
-
+	
 	void setPixel(int, int, const Color&);
 	Color getPixel(int, int);
 
+	void fill(const Color&);
 	bool save(const std::string&);
 
 private:
-	void init(const std::string&);
+	void loadFromFile(const std::string&);
+	void writeToFile(void*, size_t, size_t, FILE*);
+	void readFromFile(void*, size_t, size_t, FILE*);
 };
 

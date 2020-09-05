@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include "bmp.h"
+
 #include <stdio.h>
 #include <cstring>
 
@@ -9,52 +10,43 @@
 Image::Image(int w, int h) :
     m_width(w),
     m_height(h),
-    m_color_map(new Color* [h])
+    m_color_map(m_height)
 {
-    if ((m_width & 4) != 0)
+    if ((m_width & 3) != 0)
     {
-        delete[] m_color_map;
-        exit(-1);
+        throw std::runtime_error("Width of image must be multiply of 4");
     }
-
-    int i = 0;
-
-    try
+    else
     {
-        for (; i < m_height; i++)
+        try
         {
-            m_color_map[i] = new Color[w];
+            for (auto it = m_color_map.begin(); it != m_color_map.end(); ++it)
+            {
+                *it = std::vector<Pointer<Color>>(m_width);
+
+                for (auto _it = it->begin(); _it != it->end(); ++_it)
+                {
+                    *_it = Pointer<Color>(new Color(0));
+                }
+            }
         }
-    }
-    catch (const std::bad_alloc& e)
-    {
-        for (int j = i - 1; j >= 0; j--)
+        catch (const std::bad_alloc& e)
         {
-            delete m_color_map[j];
+            throw std::runtime_error("Image too big: out of memory");
         }
-
-        delete[] m_color_map;
-
-        exit(-1);
     }
 }
 
 Image::Image(const std::string& file_name):
     m_width(0),
     m_height(0),
-    m_color_map(0)
+    m_color_map()
 {
-    init(file_name); 
+    loadFromFile(file_name);
 }
 
 Image::~Image()
 {
-    for (int i = 0; i < m_height; i++)
-    {
-        delete[] m_color_map[i];
-    }
-
-    delete[] m_color_map;
 }
 
 int Image::width() const
@@ -73,7 +65,7 @@ void Image::fill(const Color& color)
     {
         for (int j = 0; j < m_height; j++)
         {
-            m_color_map[j][i] = color;
+            m_color_map[j][i] = new Color(color);
         }
     }
 }
@@ -82,7 +74,7 @@ void Image::setPixel(int i, int j, const Color& color)
 {
     if (i >= 0 && i < m_width && j >= 0 && j < m_height)
     {
-        m_color_map[j][i] = color;
+        m_color_map[j][i] = new Color(color);
     }
 }
 
@@ -90,88 +82,121 @@ Color Image::getPixel(int i, int j)
 {
     if (i >= 0 && i < m_width && j >= 0 && j < m_height)
     {
-        return m_color_map[j][i];
+        return *m_color_map[j][i];
     }
-
-    return Color();
+    else
+    {
+        throw std::out_of_range("Required pixel does not exists");
+    }
 }
 
 bool Image::save(const std::string& file_path)
 {
-    FILE* f = fopen(file_path.c_str(), "wb");
+    FILE* out_file = fopen(file_path.c_str(), "wb");
 
-    if (f != 0)
+    if (out_file != NULL)
     {
-	BMP bmp;
-	memset(&bmp, 0, sizeof(BMP));
+        BMP bmp;
+        memset(&bmp, 0, sizeof(BMP));
 
-	bmp.header = 0x4d42;
-	bmp.size = sizeof(BMP) + (m_width * m_height * 3);
-	bmp.offset = sizeof(BMP);
-	bmp.sizeOfBitMap = 40;
-	bmp.width = m_width;
-	bmp.height = m_height;
-	bmp.planes = 1;
-	bmp.bpp = 24;
+        bmp.header          = 0x4d42;
+        bmp.sizeOfFile      = sizeof(BMP) + (m_width * m_height * 3);
+        bmp.offset          = sizeof(BMP);
+        bmp.sizeOfBitMap    = 40;
+        bmp.width           = m_width;
+        bmp.height          = m_height;
+        bmp.planes          = 1;
+        bmp.bpp             = 24;
 
-        fwrite(&bmp, sizeof(BMP), 1, f);
+        writeToFile(&bmp, sizeof(BMP), 1, out_file);
 
-        std::cout << "Start write image data (w, h):" << width() << " " << height() << std::endl;
-        
         char color_data[3] = { 0 };
 
         for (int i = m_height - 1; i >= 0; i--)
         {
             for (int j = 0; j < m_width; j++)
             {
-                color_data[0] = m_color_map[i][j].b();
-                color_data[1] = m_color_map[i][j].g();
-                color_data[2] = m_color_map[i][j].r();
+                color_data[0] = m_color_map[i][j]->b();
+                color_data[1] = m_color_map[i][j]->g();
+                color_data[2] = m_color_map[i][j]->r();
 
-                fwrite(color_data, 3 *sizeof(char), 1, f);
+                writeToFile(color_data, sizeof(color_data), 1, out_file);
             }
         }
-
+        
+        fclose(out_file);
         return true;
+    }
+    else
+    {
+        throw std::runtime_error("Cannot open file: " + file_path);
     }
 
     return false;
 }
 
-void Image::init(const std::string& str)
+void Image::loadFromFile(const std::string& file_path)
 {
-    FILE* f = fopen(str.c_str(), "rb");
+    FILE* in_file = fopen(file_path.c_str(), "rb");
 
-    if (f != 0)
+    if (in_file != 0)
     {
-	    BMP bmp = {0};
+	    BMP bmp = { 0 };
+        readFromFile(&bmp, sizeof(BMP), 1, in_file);
 
-        fread(&bmp, sizeof(BMP), 1, f);
-
-        int w = bmp.width, h = bmp.height, c = bmp.bpp >> 3;
+        int w = bmp.width, h = bmp.height, bytespp = bmp.bpp >> 3;
         
-        if (c == 3)
+        if (bytespp == 3)
         {
-            int size = w * h * c;
-            byte* data = new byte[size];
-            fread(data, sizeof(byte), size, f);
+            int size = w * h * bytespp;
+            std::vector<byte> data(size);
+            readFromFile(&data[0], sizeof(byte), size, in_file);
             
             m_width = w;
             m_height = h;
-            m_color_map = new Color*[h];
+            
+            m_color_map = std::vector<std::vector<Pointer<Color>>>(m_height);
 
             for (int i = 0; i < h; i++)
             {
-                m_color_map[i] = new Color[w];
+                m_color_map[i] = std::vector<Pointer<Color>>(m_width);
 
                 for (int j = 0; j < w; j++)
                 {
-                    int index = c * ((h - i - 1) * w + j);
-                    m_color_map[i][j] = Color(data[index + 2], data[index + 1], data[index]);
+                    int index = bytespp * ((h - i - 1) * w + j);
+                    m_color_map[i][j] = Pointer<Color>(new Color(data[index + 2], 
+                                                                 data[index + 1], 
+                                                                 data[index    ]));
                 }
             }
-
-            delete[] data;
         }
+        else
+        {
+            throw std::runtime_error("Bad number of bits per pixel: should be 24 in file " + file_path);
+        }
+    }
+    else
+    {
+        throw std::runtime_error("Cannot read file: " + file_path);
+    }
+}
+
+void Image::writeToFile(void* data, size_t size_of_element, size_t count, FILE* stream)
+{
+    size_t result = fwrite(data, size_of_element, count, stream);
+
+    if (result != count)
+    {
+        throw std::runtime_error("File writing error: ");
+    }
+}
+
+void Image::readFromFile(void* data, size_t size_of_element, size_t count, FILE* stream)
+{
+    size_t result = fread(data, size_of_element, count, stream);
+
+    if (result != count)
+    {
+        throw std::runtime_error("File writing error: ");
     }
 }

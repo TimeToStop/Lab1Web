@@ -6,15 +6,11 @@
 Painter::Painter(Image& img):
 	m_image(img)
 {
-	initFont();
+	readFontImages();
 }
 
 Painter::~Painter()
 {
-	for (size_t i = 0; i < m_font.size(); i++)
-	{
-		delete m_font[i];
-	}
 }
 
 void Painter::setColor(const Color& color)
@@ -22,16 +18,36 @@ void Painter::setColor(const Color& color)
 	m_color = color;
 }
 
-void Painter::drawImageByStringCode(int x, int y, const std::string& value)
+void Painter::drawFloatString(int x, int y, std::string& value)
 {
-	const int w = m_font[0]->width();
-
-	for (size_t i = 0; i < value.size(); i++)
+	for (std::string::iterator sym = value.begin(); sym != value.end(); ++sym)
 	{
-		draw(x, y, value[i]);
-		x += w;
+		std::map<char, Pointer<Image>>::iterator it = m_font.find(*sym);
+
+		if (it != m_font.end())
+		{
+			Image* img = it->second.get();
+			drawImage(x, y, it->second.get());
+			x += img->width();
+		}
 	}
-} 
+}
+void Painter::drawError(int x, int y)
+{
+	for (int i = 0; i < m_error->width(); i++)
+	{
+		for (int j = 0; j < m_error->height(); j++)
+		{
+			Color c = m_error->getPixel(i, j);
+
+			if (c.r() == 0 && c.g() == 0 && c.b() == 0)
+			{
+				m_image.setPixel(i, j, m_color);
+			}
+		}
+	}
+}
+
 
 void Painter::drawHorizontalLine(int row)
 {
@@ -101,34 +117,8 @@ void Painter::drawCircle(int x, int y, int radius)
 	}
 }
 
-void Painter::draw(int x, int y, char c)
+void Painter::drawImage(int x, int y, Image* img)
 {
-	if ('0' <= c && c <= '9')
-	{
-		drawImage(x, y, c - '0');
-	}
-	else if (c == ',' || c == '.')
-	{
-		drawImage(x, y, 10);
-	}
-	else if (c == '-')
-	{
-		drawImage(x, y, 11);
-	}
-	else if (c == 'e')
-	{
-		drawImage(x, y, 12);
-	}
-	else
-	{
-		exit(-1);
-	}
-}
-
-void Painter::drawImage(int x, int y, size_t index)
-{
-	Image* img = m_font[index];
-
 	for (int i = 0; i < img->height(); i++)
 	{
 		for (int j = 0; j < img->width(); j++)
@@ -143,29 +133,33 @@ void Painter::drawImage(int x, int y, size_t index)
 	}
 }
 
-void Painter::initFont()
+void Painter::readFontImages()
 { 
-	m_font.push_back(new Image("font/0.bmp"));
-	m_font.push_back(new Image("font/1.bmp"));
-	m_font.push_back(new Image("font/2.bmp"));
-	m_font.push_back(new Image("font/3.bmp"));
-	m_font.push_back(new Image("font/4.bmp"));
-	m_font.push_back(new Image("font/5.bmp"));
-	m_font.push_back(new Image("font/6.bmp"));
-	m_font.push_back(new Image("font/7.bmp"));
-	m_font.push_back(new Image("font/8.bmp"));
-	m_font.push_back(new Image("font/9.bmp"));
-	m_font.push_back(new Image("font/dot.bmp"));
-	m_font.push_back(new Image("font/minus.bmp"));
-	m_font.push_back(new Image("font/error.bmp"));
+	m_font.insert({ '0', new Image("font/0.bmp") });
+	m_font.insert({ '1', new Image("font/1.bmp") });
+	m_font.insert({ '2', new Image("font/2.bmp") });
+	m_font.insert({ '3', new Image("font/3.bmp") });
+	m_font.insert({ '4', new Image("font/4.bmp") });
+	m_font.insert({ '5', new Image("font/5.bmp") });
+	m_font.insert({ '6', new Image("font/6.bmp") });
+	m_font.insert({ '7', new Image("font/7.bmp") });
+	m_font.insert({ '8', new Image("font/8.bmp") });
+	m_font.insert({ '9', new Image("font/9.bmp") });
+	m_font.insert({ '.', new Image("font/dot.bmp") });
+	m_font.insert({ '-', new Image("font/minus.bmp") });
 
-	for (size_t i = 0; i < m_font.size(); i++)
+	for (std::map<char, Pointer<Image>>::iterator it = m_font.begin(); it != m_font.end(); ++it)
 	{
-		std::cout << m_font[i]->width() << std::endl;
-
-		if (m_font[i]->width() == 0)
+		if (it->second->width() == 0)
 		{
-			exit(-1);
+			throw std::runtime_error("Cannot read font image.");
 		}
+	}
+
+	m_error = new Image("font/error.bmp");
+
+	if (m_error->width() == 0)
+	{
+		throw std::runtime_error("Cannot read: font/error.bmp");
 	}
 }

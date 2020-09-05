@@ -41,5 +41,8 @@
     <ClInclude Include="writer\bmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pointer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

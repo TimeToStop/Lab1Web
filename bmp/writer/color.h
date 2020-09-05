@@ -11,7 +11,7 @@ class Color
 public:
 	Color();
 	Color(byte v);
-	Color(byte r, byte g, byte b, byte a = 255);
+	Color(byte r, byte g, byte b);
 	Color(const Color&);
 	~Color();
 
