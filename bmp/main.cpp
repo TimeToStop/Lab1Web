@@ -3,6 +3,7 @@
 #include <math.h>
 #include <sstream>
 
+#include "filesystem.h"
 #include "painter/painter.h"
 #include "writer/bmp.h"
 
@@ -10,15 +11,12 @@
 // Image Info
 const int size = 240;
 
-
-
 const int y_rad_dataX			= 119;
 
 const int y_plus_radY			= 26;
 const int y_plus_radHalfY		= 69;
 const int y_minus_radHalfY		= 154;
 const int y_minus_radY			= 198;
-
 
 
 const int x_rad_dataY			= 100;
@@ -38,12 +36,14 @@ std::string toString(float);
 
 int main(int argc, char* argv[])
 {
-	if (argc == 4)
+	if (argc == 5)
 	{
-		std::string x(argv[1]), y(argv[2]), r(argv[3]);
+		std::string x(argv[2]), y(argv[3]), r(argv[4]);
 
-		if (valid(argv[1]) && valid(argv[2]) && valid(argv[3]))
+		if (valid(argv[2]) && valid(argv[3]) && valid(argv[4]))
 		{
+			FileSystem::init(argv[1]);
+
 			float xf = floatVal(x);
 			float yf = floatVal(y);
 			float rf = floatVal(r);
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		std::cout << "Bad input, expected: x y r" << std::endl;
+		std::cout << "Bad input, expected: {Resource directory} x y r" << std::endl;
 		return -1;
 	}
 

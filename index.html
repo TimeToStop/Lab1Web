@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
     <head>
         <meta charset="UTF-8"/>
         <title>Lab1</title>
@@ -35,7 +35,7 @@
         </div>
         <div class="coord">
             <div class="content">
-                <img class="image" src="img/coord.png"/>
+                <img class="image" src="img/coord.png" alt="coordinate task"/>
             </div>
         </div>
         <div class="form">
@@ -81,19 +81,26 @@
         </div>
         <div class="table">
             <div class="content">
-              <table>
-                    <tr>
-                        <td>X</td>
-                        <td>Y</td>
-                        <td>R</td>
-                        <td>Ответ</td>
-                        <td>Время</td>
-                        <td>Время работы скрипта (в мс)</td>
-                    </tr>
-              </table>
+                <div class="result-holder">
+                    <div class="result">
+                        <div>
+                            <img src="img/coord.png" alt="result"/>
+                        </div>
+                        <div>
+                            <h5 class="result-header">Попадание</h5>
+                            <div class="result-data">
+                                <p>X = 0</p>
+                                <p>Y = 0</p>
+                                <p>R = 0</p>
+                            </div>
+                            <div class="execution-date">
+                                25 сентября 2020
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
         <script src="js/main.js">
         </script>
     </body>

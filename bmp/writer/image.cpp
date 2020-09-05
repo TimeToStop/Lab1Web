@@ -1,10 +1,10 @@
 #include "image.h"
 
 #include "bmp.h"
+#include "../filesystem.h"
 
 #include <stdio.h>
 #include <cstring>
-
 #include <iostream>
 
 Image::Image(int w, int h) :
@@ -42,7 +42,7 @@ Image::Image(const std::string& file_name):
     m_height(0),
     m_color_map()
 {
-    loadFromFile(file_name);
+    loadFromFile(FileSystem::fullPath(file_name));
 }
 
 Image::~Image()
@@ -92,7 +92,7 @@ Color Image::getPixel(int i, int j)
 
 bool Image::save(const std::string& file_path)
 {
-    FILE* out_file = fopen(file_path.c_str(), "wb");
+    FILE* out_file = fopen(FileSystem::fullPath(file_path).c_str(), "wb");
 
     if (out_file != NULL)
     {
@@ -177,7 +177,7 @@ void Image::loadFromFile(const std::string& file_path)
     }
     else
     {
-        throw std::runtime_error("Cannot read file: " + file_path);
+        throw std::runtime_error("Cannot open file: " + file_path);
     }
 }
 

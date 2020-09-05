@@ -1,4 +1,5 @@
 #include "painter.h"
+#include "../filesystem.h"
 
 #include <math.h>
 #include <iostream>

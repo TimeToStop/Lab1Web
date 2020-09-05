@@ -39,7 +39,7 @@ public:
 		increaseRefCount();
 	}
 		
-	Pointer(Pointer<T>&& other) :
+	Pointer(Pointer<T>&& other) noexcept:
 		m_ref_count(other.m_ref_count),
 		m_object(other.m_object)
 	{

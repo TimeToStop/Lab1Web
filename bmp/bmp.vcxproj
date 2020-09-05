@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="painter\painter.cpp" />
     <ClCompile Include="writer\color.cpp" />
@@ -171,6 +172,7 @@
   <ItemGroup>
     <ClInclude Include="painter\painter.h" />
     <ClInclude Include="pointer.h" />
+    <ClInclude Include="filesystem.h" />
     <ClInclude Include="writer\bmp.h" />
     <ClInclude Include="writer\color.h" />
     <ClInclude Include="writer\image.h" />
