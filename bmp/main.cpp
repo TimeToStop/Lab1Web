@@ -98,11 +98,6 @@ void make_image(float x, float y, float r)
 	std::string m_rad = value(-r);
 	std::string m_half_rad = value(-r / 2);
 	
-	std::cout << rad << std::endl;
-	std::cout << half_rad << std::endl;
-	std::cout << m_rad << std::endl;
-	std::cout << m_half_rad << std::endl;
-
 	painter.drawFloatString(x_minus_radX,		x_rad_dataY, m_rad);
 	painter.drawFloatString(x_minus_radHalfX,	x_rad_dataY, m_half_rad);
 	painter.drawFloatString(x_plus_radHalfX,	x_rad_dataY, half_rad);
@@ -145,7 +140,7 @@ bool valid(const char* str)
 
 	for (const char* it = str; *it != 0; it++)
 	{
-		if (*it == ',' || *it == '.')
+		if (*it == '.')
 		{
 			if (has_dot)
 			{
@@ -155,6 +150,11 @@ bool valid(const char* str)
 			{
 				has_dot = true;
 			}
+		}
+		else if (*it == ',')
+		{
+			std::cout << "Float separator must be '.'" << std::endl;
+			return false;
 		}
 		else if (!('0' <= *it && *it <= '9'))
 		{
@@ -195,16 +195,8 @@ float floatVal(const std::string& s)
 	float r;
 	std::stringstream ss;
 	ss << s;
-	ss >> value;
-	if (value == 0)
-	{
-		ss >> r;
-		return r;
-	}
-	else
-	{
-		return value;
-	}
+	ss >> r;
+	return r;
 }
 
 std::string toString(float value)
