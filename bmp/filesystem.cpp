@@ -14,7 +14,7 @@ std::string FileSystem::data_directory = "";
 
 std::string FileSystem::fullPath(const std::string& rel)
 {
-	std::string r = rel;
+	std::string r = data_directory + rel;
 	
 	for (std::string::iterator it = r.begin(); it != r.end(); ++it)
 	{
@@ -28,7 +28,7 @@ std::string FileSystem::fullPath(const std::string& rel)
 		}
 	}
 
-	return data_directory + r;
+	return r;
 }
 
 void FileSystem::init(const char* str)

@@ -8,6 +8,7 @@
 #include "writer/bmp.h"
 
 
+
 // Image Info
 const int size = 240;
 
@@ -33,6 +34,7 @@ bool		valid	(const char*);
 std::string value	(float);
 float		floatVal(const std::string&);
 std::string toString(float);
+std::string title(float, float, float);
 
 int main(int argc, char* argv[])
 {
@@ -126,7 +128,7 @@ void make_image(float x, float y, float r)
 		painter.drawError(10, 10);
 	}
 	 
-	img.save("res.bmp");
+	img.save("results/res" + title(x, y, r) + ".bmp");
 }
 
 bool valid(const char* str)
@@ -205,3 +207,9 @@ std::string toString(float value)
 	ss << value;
 	return ss.str();
 }
+
+std::string title(float x, float y, float r)
+{
+	return "X" + value(x) + "Y" + value(y) + "R" + value(r);
+}
+
