@@ -38,14 +38,6 @@ public:
 	{
 		increaseRefCount();
 	}
-		
-	Pointer(Pointer<T>&& other) noexcept:
-		m_ref_count(other.m_ref_count),
-		m_object(other.m_object)
-	{
-		other.m_ref_count = NULL;
-		other.m_object = NULL;
-	}
 
 	~Pointer()
 	{
@@ -83,8 +75,8 @@ public:
 	template<typename U>
 	operator Pointer<U>()
 	{
-		static_assert(std::is_convertible<T*, U*>::value,
-			"Upcast is only allowed implicitly");
+		//static_assert(std::is_convertible<T*, U*>::value,
+		//	"Upcast is only allowed implicitly");
 
 		return Pointer<U>(m_ref_count, static_cast<U*>(m_object));
 	}
@@ -92,8 +84,8 @@ public:
 	template<typename U>
 	Pointer<U> downCast()
 	{
-		static_assert(std::is_convertible<U*, T*>::value,
-			"Downcast is only allowed for thios function");
+		//static_assert(std::is_convertible<U*, T*>::value,
+		//	"Downcast is only allowed for thios function");
 
 		U* casted = dynamic_cast<U*>(m_object);
 

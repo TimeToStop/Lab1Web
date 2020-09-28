@@ -1,2 +1,41 @@
 ﻿  main.cpp
-  bmp.vcxproj -> C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\x64\Linux\bmp.exe
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,30): error C2143: syntax error: missing ')' before '('
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,23): error C2079: 'aligned' uses undefined struct '__attribute__'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,33): error C2059: syntax error: ')'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,35): error C2146: syntax error: missing ';' before identifier 'BMP'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(10,1): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(11,2): error C2275: 'WORD': illegal use of this type as an expression
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(4): message : see declaration of 'WORD'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(11,7): error C2146: syntax error: missing ')' before identifier 'header'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(27,1): error C2059: syntax error: '}'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(27,1): error C2143: syntax error: missing ';' before '}'
+  image.cpp
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,30): error C2143: syntax error: missing ')' before '('
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,23): error C2079: 'aligned' uses undefined struct '__attribute__'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,33): error C2059: syntax error: ')'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(9,35): error C2146: syntax error: missing ';' before identifier 'BMP'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(10,1): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(11,2): error C2275: 'WORD': illegal use of this type as an expression
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(4): message : see declaration of 'WORD'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(11,7): error C2146: syntax error: missing ')' before identifier 'header'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(27,1): error C2059: syntax error: '}'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\bmp.h(27,1): error C2143: syntax error: missing ';' before '}'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(101,13): error C2146: syntax error: missing ';' before identifier 'bmp'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(101,13): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(102,17): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(104,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(105,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(106,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(107,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(108,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(109,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(110,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(111,9): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(113,22): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(146,10): error C2146: syntax error: missing ';' before identifier 'bmp'
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(146,10): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(147,23): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(149,17): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(149,32): error C2065: 'bmp': undeclared identifier
+C:\Users\ravsp\OneDrive\Рабочий стол\Site\bmp\writer\image.cpp(149,54): error C2065: 'bmp': undeclared identifier
+  Generating Code...

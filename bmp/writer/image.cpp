@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 
 Image::Image(int w, int h) :
     m_width(w),
@@ -20,11 +21,12 @@ Image::Image(int w, int h) :
     {
         try
         {
-            for (auto it = m_color_map.begin(); it != m_color_map.end(); ++it)
+            for (ColorMap::iterator it = m_color_map.begin();
+                it != m_color_map.end(); ++it)
             {
-                *it = std::vector<Pointer<Color>>(m_width);
+                *it = Row(m_width);
 
-                for (auto _it = it->begin(); _it != it->end(); ++_it)
+                for (Row::iterator _it = it->begin(); _it != it->end(); ++_it)
                 {
                     *_it = Pointer<Color>(new Color(0));
                 }
@@ -155,11 +157,11 @@ void Image::loadFromFile(const std::string& file_path)
             m_width = w;
             m_height = h;
             
-            m_color_map = std::vector<std::vector<Pointer<Color>>>(m_height);
+            m_color_map = ColorMap(m_height);
 
             for (int i = 0; i < h; i++)
             {
-                m_color_map[i] = std::vector<Pointer<Color>>(m_width);
+                m_color_map[i] = Row(m_width);
 
                 for (int j = 0; j < w; j++)
                 {
@@ -200,3 +202,4 @@ void Image::readFromFile(void* data, size_t size_of_element, size_t count, FILE*
         throw std::runtime_error("File writing error: ");
     }
 }
+

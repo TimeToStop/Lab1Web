@@ -6,7 +6,7 @@
 class Painter
 {
 	Pointer<Image> m_error;
-	std::map<char, Pointer<Image>> m_font;
+	std::map<char, Pointer<Image> > m_font;
 
 	Color m_color;
 	Image& m_image;

@@ -23,7 +23,7 @@ void Painter::drawFloatString(int x, int y, std::string& value)
 {
 	for (std::string::iterator sym = value.begin(); sym != value.end(); ++sym)
 	{
-		std::map<char, Pointer<Image>>::iterator it = m_font.find(*sym);
+		std::map<char, Pointer<Image> >::iterator it = m_font.find(*sym);
 
 		if (it != m_font.end())
 		{
@@ -136,20 +136,20 @@ void Painter::drawImage(int x, int y, Image* img)
 
 void Painter::readFontImages()
 { 
-	m_font.insert({ '0', new Image("font/0.bmp") });
-	m_font.insert({ '1', new Image("font/1.bmp") });
-	m_font.insert({ '2', new Image("font/2.bmp") });
-	m_font.insert({ '3', new Image("font/3.bmp") });
-	m_font.insert({ '4', new Image("font/4.bmp") });
-	m_font.insert({ '5', new Image("font/5.bmp") });
-	m_font.insert({ '6', new Image("font/6.bmp") });
-	m_font.insert({ '7', new Image("font/7.bmp") });
-	m_font.insert({ '8', new Image("font/8.bmp") });
-	m_font.insert({ '9', new Image("font/9.bmp") });
-	m_font.insert({ '.', new Image("font/dot.bmp") });
-	m_font.insert({ '-', new Image("font/minus.bmp") });
+	m_font.insert(std::make_pair('0', new Image("font/0.bmp")));
+	m_font.insert(std::make_pair('1', new Image("font/1.bmp")));
+	m_font.insert(std::make_pair('2', new Image("font/2.bmp")));
+	m_font.insert(std::make_pair('3', new Image("font/3.bmp")));
+	m_font.insert(std::make_pair('4', new Image("font/4.bmp")));
+	m_font.insert(std::make_pair('5', new Image("font/5.bmp")));
+	m_font.insert(std::make_pair('6', new Image("font/6.bmp")));
+	m_font.insert(std::make_pair('7', new Image("font/7.bmp")));
+	m_font.insert(std::make_pair('8', new Image("font/8.bmp")));
+	m_font.insert(std::make_pair('9', new Image("font/9.bmp")));
+	m_font.insert(std::make_pair('.', new Image("font/dot.bmp")));
+	m_font.insert(std::make_pair('-', new Image("font/minus.bmp")));
 
-	for (std::map<char, Pointer<Image>>::iterator it = m_font.begin(); it != m_font.end(); ++it)
+	for (std::map<char, Pointer<Image> >::iterator it = m_font.begin(); it != m_font.end(); ++it)
 	{
 		if (it->second->width() == 0)
 		{

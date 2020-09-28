@@ -7,10 +7,14 @@
 
 class Image
 {
+	typedef std::vector<Pointer<Color> > Row;
+	typedef std::vector<Row> ColorMap;
+
+
 	int m_width;
 	int m_height;
 
-	std::vector<std::vector<Pointer<Color>>> m_color_map;
+	ColorMap m_color_map;
 
 public:
 	Image(int w, int h);

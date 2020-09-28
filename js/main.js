@@ -31,6 +31,15 @@ function validate() {
     }
     else
     {
+        let str = inputYElement.value;
+        if(str.length > 5)
+        {
+            str = str.slice(0, 5);
+            str = ''.concat(str, '1');
+        }
+
+        y = Number(str);
+
         if(!(-5 < y && y < 3))
         {
             error.innerText='Введенное значение Y не входит в диапозон (-5; 3)';
@@ -51,6 +60,36 @@ function validate() {
     }
     else
     {
+        let str = inputRElement.value;
+        if(str.length > 5)
+        {
+            if(str[0] === '2' && str[1] === '.')
+            {
+                let is_all_zero = true;
+
+                for(let i = 2; i < str.length; i++)
+                {
+                    if(str[i] !== '0')
+                    {
+                        is_all_zero = false;
+                        break;
+                    }
+                }
+
+                if(is_all_zero)
+                {
+                    error.innerText='Введенное значение R не входит в диапозон (2; 5)';
+                    return false;
+                }
+            }
+
+
+            str = str.slice(0, 5);
+            str = ''.concat(str, '1');
+        }
+
+        r = Number(str);
+
         if(!(2 < r && r < 5))
         {
             error.innerText='Введенное значение R не входит в диапозон (2; 5)';

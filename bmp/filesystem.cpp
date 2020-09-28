@@ -2,7 +2,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 	const char FileSystem::separator = '\\';
-#elif defined(__linux__)
+#elif defined(unix)ls 
 	const char FileSystem::separator = '/';
 #else
 	#error Unsupported OS type

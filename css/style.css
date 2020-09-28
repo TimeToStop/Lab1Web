@@ -39,10 +39,6 @@ body {
     padding: 0px;
 }
 
-.menu li:hover {
-    background-color: #C0C0C0;
-}
-
 .menu a {
     text-decoration: none;
     color: #696969;
@@ -50,6 +46,10 @@ body {
     font-size: 20px;
     display: block;
     margin:  11.4px 0px;
+}
+
+.menu a:hover {
+    color: #222222;
 }
 
 .maininfo {
@@ -94,10 +94,18 @@ body {
     margin: 5px;
 }
 
+.x-input:hover {
+    border-bottom-color: #F6744B;
+}
+
 .text-edit {
     width: 90%;
     border: none;
     border-bottom: 2px solid #CBBFBF;
+}
+
+.text-edit:hover {
+    border-bottom-color: #F6744B;
 }
 
 .center-buttons {
@@ -139,7 +147,6 @@ table td {
 }
 
 .result-holder {
-    background-color: #AAAAAA;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -152,12 +159,23 @@ table td {
 }
 
 .result-header {
+    max-width: 240px;
     margin: 0px;
-    font-size: 17px;
+    font-size: 21px;
+}
+
+.result-text-block {
+    margin: 10px 0px;
 }
 
 .result-data {
+    width: 80%;
     padding: 0px 15px;
+    margin: 7px 0px;
+}
+
+.result-data p {
+    margin: 5px 0px;
 }
 
 .execution-date {

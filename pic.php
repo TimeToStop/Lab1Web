@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: image/bmp');
 
-$DIR = 'E:/site/bmp/';
+$DIR = '/home/s284705/public_html/bmp/';
 
 if(isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R']))
 {
@@ -9,15 +9,20 @@ if(isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R']))
 
     if(file_exists($target) === false)
     {
-        exec( $DIR . 'bmp.exe ' . $DIR . ' ' . parse('X') . parse('Y') . parse('R'));
+        $file = fopen($target, 'w');
+        while(!chmod($target, 0777));    
+        fclose($file);
+
+        exec( $DIR . 'bmp ' . $DIR . ' ' . parse('X') . parse('Y') . parse('R'));
     }
 
+    while(!file_exists($target));
     readfile($target);
 }
 
 function parse($val)
 {
-    return str_ireplace(',', '.', $_GET[$val]) . ' ';
+    return str_ireplace(',', '.', to2Digit($_GET[$val])) . ' ';
 }
 
 function targetFileName($X, $Y, $R)
@@ -27,7 +32,12 @@ function targetFileName($X, $Y, $R)
 
 function to2Digit($val)
 {
-    $temp = str_ireplace(',', '.', (floor($val * 10) / 10));
+    if(strlen($val) > 5)
+    {
+        $val = substr($val, 0, 5);
+    }
+
+    $temp = str_ireplace(',', '.', (floor(str_ireplace(',', '.',$val) * 10) / 10));
 
     if(strpos($temp, '.') !== false)
     {

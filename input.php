@@ -1,5 +1,6 @@
 <?php session_start(); ?>
 <?php
+
 function isEmpty()
 {
     return (!isset($_GET['X']) && !isset($_GET['Y']) && !isset($_GET['R']));
@@ -14,31 +15,42 @@ function isValid()
         $R = str_ireplace(',','.', $_GET['R']);
         if (!is_numeric($X))
         {
-            return '<p id="error">X не число!</p>';
+            return 'X не число';
         }
         elseif (!is_numeric($Y))
         {
-            return '<p id="error">Y не числo!</p>';
+            return 'Y не числo';
         }
         elseif (!is_numeric($R))
         {
-            return '<p id="error">R не число!</p>';
+            return 'R не число';
+        }
+        
+        if(strlen($Y) > 5)
+        {
+            $Y = substr($Y, 0, 5);
+            $Y = $Y . '1';
         }
 
+        if(strlen($R) > 5)
+        {
+            $R = substr($R, 0, 5);
+            $R = $R . '1';
+        }
 
         if(!(-5 < $Y && $Y < 3))
         {
-            return '<p id="error">Y не входит в диапозон (-5; 3)!</p>';
+            return 'Y не входит в диапозон (-5; 3)';
         }
 
         if(!(2 < $R && $R < 5))
         {
-            return '<p id="error">R не входит в диапозон (2; 5)!</p>';
+            return 'R не входит в диапозон (2; 5)';
         }
     }
     else
     {
-        return '<p id="error">Не заданы все параметры: X,Y,R</p>';
+        return 'Не заданы все параметры: X,Y,R';
     }
 }
 ?>
@@ -57,13 +69,13 @@ function isValid()
                     <h2 class="head-label">WebProgramming</h2>
                     <ul class="menu">
                         <li>
-                            <a href="https://github.com/TimeToStop">User</a>
+                            <a href="https://github.com/TimeToStop" target="_blank">User</a>
                         </li>
                         <li>
-                            <a href="https://isu.ifmo.ru/pls/apex/f?p=2143:GR:120853349933398::NO::GR_GR,GR_DATE,GR_TYPE:p3211,01.09.2020,group">Group</a>
+                            <a href="https://isu.ifmo.ru/pls/apex/f?p=2143:GR:120853349933398::NO::GR_GR,GR_DATE,GR_TYPE:p3211,01.09.2020,group" target="_blank">Group</a>
                         </li>
                         <li>
-                            <a href="https://www.google.com/">Other</a>
+                            <a href="https://www.google.com/" target="_blank">Other</a>
                         </li>
                     </ul>
                 </div>
@@ -121,6 +133,14 @@ function isValid()
                         <input class="button" type="reset" value="Очистить" id="reset"/>
                     </div>
                     <p id="error">
+                        <?php 
+                            $validate = isValid();
+
+                            if(!is_null($validate) && (isset($_GET['X']) || isset($_GET['Y']) || isset($_GET['R'])))
+                            {
+                                echo $validate;
+                            }
+                        ?>
                     </p>
                 </form>
             </div>
@@ -129,7 +149,7 @@ function isValid()
             <div class="content">
                 <div class="result-holder">
             <?php
-//            unset($_SESSION['history']);
+            //unset($_SESSION['history']);
             $start = microtime(TRUE);
             $history = (isset($_SESSION['history']) && is_array($_SESSION['history'])) ? $_SESSION['history'] : [];
 
@@ -165,16 +185,27 @@ function isValid()
 
 
                 setlocale(LC_ALL, 'ru_RU.UTF-8');
+                date_default_timezone_set('Europe/Moscow');
                 $time = strftime('%d %b %Y %H:%M:%S', time());
-                $executeion_time = strval(round((microtime(TRUE) - $start) * 1e+6, 3));
+                $executeion_time = strval(round((microtime(TRUE) - $start) * 1e+3, 3));
 
                 if(count($history) == 0 || $history[0]['uniqid'] !== $uniqid)
                 {
+                    if(strlen($_GET['Y']) > 5)
+                    {
+                        $_GET['Y'] = substr($_GET['Y'], 0, 5);
+                    }
+            
+                    if(strlen($_GET['R']) > 5)
+                    {
+                        $_GET['R'] = substr($_GET['R'], 0, 5);
+                    }
+
                     array_unshift($history, [
-                        'X'               => $X,
-                        'Y'               => $Y,
-                        'R'               => $R,
-                        'answer'          => ($IS_SUCCESS ? 'Попадает в точку' : 'Не попадает в точку'),
+                        'X'               => $_GET['X'],
+                        'Y'               => $_GET['Y'],
+                        'R'               => $_GET['R'],
+                        'answer'          => ($IS_SUCCESS ? 'Попадает в область' : 'Не попадает в область'),
                         'time'            => $time,
                         'executeion_time' => $executeion_time,
                         'uniqid'          =>  $uniqid
@@ -188,25 +219,24 @@ function isValid()
 
             foreach ($history as $result) {
                 ?>
-
                 <div class="result">
                     <div>
-                        <img src="http://localhost:8888/pic.php?X=<?=$result['X']?>&Y=<?=$result['Y']?>&R=<?=$result['R']?>" alt="result"/>
+                        <img src="https://se.ifmo.ru/~s284705/pic.php?X=<?=$result['X']?>&Y=<?=$result['Y']?>&R=<?=$result['R']?>" alt="result"/>
                     </div>
-                    <div>
+                    <div class="result-text-block">
                         <h5 class="result-header"><?= $result['answer'] ?></h5>
                         <div class="result-data">
                             <p>X = <?= $result['X']?></p>
                             <p>Y = <?= $result['Y']?></p>
                             <p>R = <?= $result['R']?></p>
-                            <p>Execution: <?=$result['executeion_time'] ?> ms</p>
+                            <p>Execution time:</p>
+                            <p><?=$result['executeion_time'] ?> ms</p>
                         </div>
                         <div class="execution-date">
                             <?= $result['time'] ?>
                         </div>
                     </div>
                 </div> 
-
                 <?php
             }
             ?>
