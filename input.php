@@ -25,6 +25,22 @@ function isValid()
         {
             return 'R не число';
         }
+
+        $validX = array('-4', '-3', '-2', '-1', '0', '1', '2', '3', '4');
+        $valid = false;
+
+        foreach($validX as $val)
+        {
+            if(strcmp($val, $X) == 0)
+            {
+                $valid = true;
+            }
+        }
+
+        if(!$valid) 
+        {
+            return 'X не попадает в {-4, -3, -2, -1, 0, 1, 2, 3, 4}';
+        }
         
         if(strlen($Y) > 5)
         {
@@ -145,16 +161,15 @@ function isValid()
                 </form>
             </div>
         </div>
-        <div class="table">
-            <table>
-                <tr> 
-                    <td>X</td>
-                    <td>Y</td>
-                    <td>R</td>
-                    <td>Ответ</td>
-                    <td>Время</td>
-                    <td>Время работы скрипта</td>
-                </tr>
+        <table>
+            <tr> 
+                <td>X</td>
+                <td>Y</td>
+                <td>R</td>
+                <td>Ответ</td>
+                <td>Время</td>
+                <td>Время работы скрипта</td>
+            </tr>
 
             <?php
             //unset($_SESSION['history']);
@@ -227,18 +242,17 @@ function isValid()
             foreach ($history as $result) {
                 ?>
                 <tr> 
-                    <td><?=$history['X']?></td>
-                    <td><?=$history['Y']?></td>
-                    <td><?=$history['R']?></td>
-                    <td><?=$history['answer']?></td>
-                    <td><?=$history['time']?></td>
-                    <td><?=$history['executeion_time']?></td>
+                    <td><?=$result['X']?></td>
+                    <td><?=$result['Y']?></td>
+                    <td><?=$result['R']?></td>
+                    <td><?=$result['answer']?></td>
+                    <td><?=$result['time']?></td>
+                    <td><?=$result['executeion_time']?></td>
                 </tr>
                 <?php
             }
             ?>
-            </table>
-        </div>
+        </table>
 <script src="js/main.js">
 </script>
 </body>

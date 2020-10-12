@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: image/bmp');
 
-$DIR = '/home/s284705/public_html/bmp/';
+$DIR = 'E:\\site\\bmp\\';
 
 if(isset($_GET['X']) && isset($_GET['Y']) && isset($_GET['R']))
 {

@@ -31,7 +31,7 @@ function validate() {
     }
     else
     {
-        let str = inputYElement.value;
+        let str = inputYElement.replace(',', '.');
         if(str.length > 5)
         {
             str = str.slice(0, 5);
@@ -60,7 +60,7 @@ function validate() {
     }
     else
     {
-        let str = inputRElement.value;
+        let str = inputRElement.value.replace(',', '.');
         if(str.length > 5)
         {
             if(str[0] === '2' && str[1] === '.')
@@ -82,12 +82,12 @@ function validate() {
                     return false;
                 }
             }
-
-
+        
+            
             str = str.slice(0, 5);
             str = ''.concat(str, '1');
         }
-
+    
         r = Number(str);
 
         if(!(2 < r && r < 5))
