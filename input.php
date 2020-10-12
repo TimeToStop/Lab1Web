@@ -146,8 +146,16 @@ function isValid()
             </div>
         </div>
         <div class="table">
-            <div class="content">
-                <div class="result-holder">
+            <table>
+                <tr> 
+                    <td>X</td>
+                    <td>Y</td>
+                    <td>R</td>
+                    <td>Ответ</td>
+                    <td>Время</td>
+                    <td>Время работы скрипта</td>
+                </tr>
+
             <?php
             //unset($_SESSION['history']);
             $start = microtime(TRUE);
@@ -214,35 +222,23 @@ function isValid()
                 }
 
                 $_SESSION['history'] = $history;
-            }
-
+            }            
 
             foreach ($history as $result) {
                 ?>
-                <div class="result">
-                    <div>
-                        <img src="https://se.ifmo.ru/~s284705/pic.php?X=<?=$result['X']?>&Y=<?=$result['Y']?>&R=<?=$result['R']?>" alt="result"/>
-                    </div>
-                    <div class="result-text-block">
-                        <h5 class="result-header"><?= $result['answer'] ?></h5>
-                        <div class="result-data">
-                            <p>X = <?= $result['X']?></p>
-                            <p>Y = <?= $result['Y']?></p>
-                            <p>R = <?= $result['R']?></p>
-                            <p>Execution time:</p>
-                            <p><?=$result['executeion_time'] ?> ms</p>
-                        </div>
-                        <div class="execution-date">
-                            <?= $result['time'] ?>
-                        </div>
-                    </div>
-                </div> 
+                <tr> 
+                    <td><?=$history['X']?></td>
+                    <td><?=$history['Y']?></td>
+                    <td><?=$history['R']?></td>
+                    <td><?=$history['answer']?></td>
+                    <td><?=$history['time']?></td>
+                    <td><?=$history['executeion_time']?></td>
+                </tr>
                 <?php
             }
             ?>
-            </div>
+            </table>
         </div>
-    </div>
 <script src="js/main.js">
 </script>
 </body>
