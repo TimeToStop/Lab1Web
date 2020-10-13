@@ -9,8 +9,12 @@ function validate() {
     let inputXElement = document.getElementById('inputX');
     let inputYElement = document.getElementById('inputY');
     let inputRElement = document.getElementById('inputR');
-    let y = Number(inputYElement.value.replace(',', '.'));
-    let r = Number(inputRElement.value.replace(',', '.'));
+
+    let str_y = inputYElement.value.replace(',', '.');
+    let str_r = inputRElement.value.replace(',', '.');
+
+    let y = Number(str_y);
+    let r = Number(str_r);
 
     if(inputXElement.selectedIndex === 0)
     {
@@ -31,7 +35,7 @@ function validate() {
     }
     else
     {
-        let str = inputYElement.replace(',', '.');
+        let str = str_y;
         if(str.length > 5)
         {
             str = str.slice(0, 5);
@@ -60,7 +64,7 @@ function validate() {
     }
     else
     {
-        let str = inputRElement.value.replace(',', '.');
+        let str = str_r;
         if(str.length > 5)
         {
             if(str[0] === '2' && str[1] === '.')
